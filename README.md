@@ -1,11 +1,20 @@
-<h1 align="center">🧰HeFlwr: FL Package for Heterogeneous Devices🧰 </h1>
+<br/>
+<br/>
+<div align="center">
+    <img src='pictures/logo.svg' width="200" alt="logo">
+</div>
+<h1 align="center">HeFlwr: FL Package for Heterogeneous Devices</h1>
+
+
+
+
+
 
 <div align="center">
 
 English | [简体中文](./README.zh.md)
 </div>
 
-![logo](/pictures/logo.svg)
 
 ## 🚀Download
 ``` shell
