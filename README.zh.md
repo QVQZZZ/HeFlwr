@@ -1,7 +1,5 @@
-<br/>
-<br/>
 <div align="center">
-    <img src='pictures/logo.svg' width="200" alt="logo">
+    <img src='pictures/logo.svg' width="250" alt="logo">
 </div>
 <h1 align="center"> HeFlwr: 用于异构设备的联邦学习框架 </h1>
 

@@ -1,7 +1,5 @@
-<br/>
-<br/>
 <div align="center">
-    <img src='pictures/logo.svg' width="200" alt="logo">
+    <img src='pictures/logo.svg' width="250" alt="logo">
 </div>
 <h1 align="center">HeFlwr: FL Package for Heterogeneous Devices</h1>
 
