@@ -16,7 +16,7 @@ class FileMonitor:
         self.file = file
         self.interval = interval
         self.monitoring = multiprocessing.Event()
-        self.monitor_process = None  # 监控进程
+        self.monitor_process = None  # monitoring process
         self.metrics = {
             'cpu': True,
             'memory': True,
@@ -45,7 +45,7 @@ class FileMonitor:
     def update_metrics(self):
         # 在子进程内部创建Process对象，避免Windows使用multiprocessing情况下可能出现的错误
         # 具体的错误为TypeError: cannot pickle '_thread.RLock' object
-        # 这是因为在Windows下使用multiprocessing时，尝试在多个进程之间共享了不可序列化的_thread.RLock对象。
+        # 这是因为在Windows下使用multiprocessing时，尝试在多个进程之间共享了不可序列化的_thread.RLock对象
         process = psutil.Process(self.pid)
         with open(self.file, 'a') as f:
             current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")

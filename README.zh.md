@@ -5,8 +5,10 @@
 [English](./README.md) | 简体中文
 </div>
 
+![logo](/pictures/logo.svg)
+
 ## 🚀下载
-``` python
+``` shell
 pip install heflwr
 ```
 

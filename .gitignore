@@ -3,3 +3,4 @@ dist
 src/heflwr.egg-info
 .idea
 __pycache__
+examples/data

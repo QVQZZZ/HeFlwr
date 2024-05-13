@@ -7,7 +7,7 @@ from ssl import SSLContext
 import warnings
 
 # Create logger
-LOGGER_NAME = "hetero-flwr"
+LOGGER_NAME = "HeFlwr"
 HETERO_FLOWER_LOGGER = logging.getLogger(LOGGER_NAME)
 HETERO_FLOWER_LOGGER.setLevel(logging.DEBUG)
 

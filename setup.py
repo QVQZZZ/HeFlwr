@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="heflwr",
-    version="0.1.0",
+    version="0.1.2",
     description="「HeFlwr」is a federated learning package for heterogeneous devices.",
     packages=find_packages(where='src'),
     package_dir={'': 'src'},

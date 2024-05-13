@@ -80,7 +80,7 @@ def merge(results: List[Tuple[ClientProxy, FitRes]], client_nets: List[nn.Module
                 client_layers = [dict(client_net.named_modules())[layer_name] for client_net in client_nets]
                 aggregate_layer(layer, client_layers, num_examples_list)
             else:
-                logger.warn(f"Can't merge {layer}, ignore it.")
+                logger.debug(f"Can't merge {layer}, ignore it.")
 
         array_list: List[np.ndarray] = [_.numpy() for _ in list(server_net.parameters())]
         parameters = ndarrays_to_parameters(array_list)
