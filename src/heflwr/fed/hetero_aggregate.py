@@ -9,7 +9,7 @@ from flwr.server.client_proxy import ClientProxy
 
 from .aggregate import aggregate_layer
 from ..nn import SSLinear, SSConv2d
-from ..log.logger import log
+from ..log.logger import logger
 
 
 def extract(parameters: Parameters, client_net: nn.Module, server_net: nn.Module) -> Parameters:
@@ -80,7 +80,7 @@ def merge(results: List[Tuple[ClientProxy, FitRes]], client_nets: List[nn.Module
                 client_layers = [dict(client_net.named_modules())[layer_name] for client_net in client_nets]
                 aggregate_layer(layer, client_layers, num_examples_list)
             else:
-                log(f"Can't merge {layer}, ignore it.")
+                logger.warn(f"Can't merge {layer}, ignore it.")
 
         array_list: List[np.ndarray] = [_.numpy() for _ in list(server_net.parameters())]
         parameters = ndarrays_to_parameters(array_list)
