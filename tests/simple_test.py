@@ -1,8 +1,8 @@
 import sys
-sys.path.append(r'D:/06_project/03_Pycharm_Project/heflwr/src')
+sys.path.append(r'your/path/to/src')
 
 import heflwr
-import heflwr.fl
+import heflwr.fed
 import heflwr.log
 import heflwr.monitor
 import heflwr.nn
