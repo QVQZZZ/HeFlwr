@@ -1,8 +1,10 @@
-from .sslinear import SSLinear as SSLinear
-from .ssconv2d import SSConv2d as SSConv2d
+from typing import Union
+
+from .sslinear import SSLinear
+from .ssconv2d import SSConv2d
 
 
-SUPPORT_LAYER = (
+SUPPORT_LAYER = Union[
     SSLinear,
     SSConv2d,
-)
+]

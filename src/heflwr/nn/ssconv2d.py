@@ -1,12 +1,16 @@
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from typing import Tuple, List, Union, Optional
 from typing_extensions import Self
 from fractions import Fraction
 
-Interval = Tuple[str, str]  # 如(0,0.5)代表提取前50%
-Intervals = List[Tuple[str, str]]  # 如[(0,0.2),(0.5,0.8)]也代表提取50%，只不过提取的位置不同
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+
+# For example, (0, 0.5) represents extracting the first 50%.
+Interval = Tuple[str, str]
+# For example, [(0, 0.2), (0.5, 0.8)] also represents extracting 50%, but at different positions.
+Intervals = List[Tuple[str, str]]
 Layer_Range = Union[Interval, Intervals]
 
 
@@ -16,20 +20,26 @@ class SSConv2d(nn.Conv2d):
                  dilation: Union[int, Tuple[int, int]] = 1, groups: int = 1, bias: bool = True,
                  in_channels_ranges: Layer_Range = ('0', '1'), out_channels_ranges: Layer_Range = ('0', '1')):
 
-        # if in_channels_ranges/out_channels_ranges belong to Interval, then convert into Intervals
+        # if in_channels_ranges/out_channels_ranges belong to Interval, then convert into Intervals.
         if isinstance(in_channels_ranges[0], str):
             in_channels_ranges = [in_channels_ranges]
         if isinstance(out_channels_ranges[0], str):
             out_channels_ranges = [out_channels_ranges]
 
-        # Convert string interval into fraction interval
+        # Convert string interval into fraction interval.
         in_channels_ranges = [tuple(map(self.parse_fraction_strings, range_str)) for range_str in in_channels_ranges]
         out_channels_ranges = [tuple(map(self.parse_fraction_strings, range_str)) for range_str in out_channels_ranges]
 
-        super(SSConv2d, self).__init__(in_channels=sum(int(in_channels * (end - start)) for start, end in in_channels_ranges),
-                                       out_channels=sum(int(out_channels * (end - start)) for start, end in out_channels_ranges),
-                                       kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation,
-                                       groups=groups, bias=bias)
+        super(SSConv2d, self).__init__(
+            in_channels=sum(int(in_channels * (end - start)) for start, end in in_channels_ranges),
+            out_channels=sum(int(out_channels * (end - start)) for start, end in out_channels_ranges),
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            dilation=dilation,
+            groups=groups,
+            bias=bias,
+        )
 
         self.in_channels_ranges = in_channels_ranges
         self.out_channels_ranges = out_channels_ranges
@@ -45,12 +55,30 @@ class SSConv2d(nn.Conv2d):
                 f'out_channels_ranges={self.out_channels_ranges}')
 
     def reset_parameters_from_father_layer(self: Self, father_layer: Union[Self, nn.Conv2d]) -> None:
-        father_out_indices_start = [int(out_range[0] * father_layer.out_channels) for out_range in self.out_channels_ranges]
-        father_out_indices_end = [int(out_range[1] * father_layer.out_channels) for out_range in self.out_channels_ranges]
+        """
+        Resets the parameters of the current layer based on the parameters of a parent (father) layer.
+
+        This method is used to propagate parameters from a parent layer to the current layer, effectively
+        initializing or updating the current layer's parameters.
+
+        The method identifies matching blocks of parameters between the layers based on their relative
+        positions, and uses the `get_subset_parameters` and `set_subset_parameters` methods to transfer
+        the parameters.
+
+        :param father_layer: The parent layer of type Self or nn.Conv2d from which the parameters are to be propagated.
+
+        :return: None. The method updates the parameters of the current layer in place.
+        """
+        father_out_indices_start = [int(out_range[0] * father_layer.out_channels)
+                                    for out_range in self.out_channels_ranges]
+        father_out_indices_end = [int(out_range[1] * father_layer.out_channels)
+                                  for out_range in self.out_channels_ranges]
         father_out_indices = list(zip(father_out_indices_start, father_out_indices_end))
 
-        father_in_indices_start = [int(in_range[0] * father_layer.in_channels) for in_range in self.in_channels_ranges]
-        father_in_indices_end = [int(in_range[1] * father_layer.in_channels) for in_range in self.in_channels_ranges]
+        father_in_indices_start = [int(in_range[0] * father_layer.in_channels)
+                                   for in_range in self.in_channels_ranges]
+        father_in_indices_end = [int(in_range[1] * father_layer.in_channels)
+                                 for in_range in self.in_channels_ranges]
         father_in_indices = list(zip(father_in_indices_start, father_in_indices_end))
 
         child_out_indices = self.convert_indices(father_out_indices)
@@ -67,6 +95,19 @@ class SSConv2d(nn.Conv2d):
 
     @staticmethod
     def convert_indices(indices: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+        """
+        Converts a list of index tuples into a new list of index tuples with adjusted offsets.
+
+        Each tuple in the input list contains a start and end index. This method calculates new start and
+        end indices such that each new tuple's start index begins where the previous one ended, effectively
+        creating a continuous range of indices without overlap.
+
+        :param indices: A list of tuples, where each tuple contains a pair of integers representing start
+                        and end indices.
+
+        :return: A list of tuples with converted indices that maintain the original ranges but with a
+                 continuous offset.
+        """
         ret_indices = []
         offset = 0
         for idx in indices:
@@ -78,14 +119,49 @@ class SSConv2d(nn.Conv2d):
         return ret_indices
 
     @staticmethod
-    def get_subset_parameters(father_layer: nn.Conv2d, out_index: List[Tuple[int, int]], in_index: List[Tuple[int, int]]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
+    def get_subset_parameters(father_layer: nn.Conv2d, out_index: List[Tuple[int, int]],
+                              in_index: List[Tuple[int, int]]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
+        """
+        Retrieves the parameters of a subset of the model's weights and biases.
+
+        This method is used to get a specific block of the model's weight matrix and the corresponding bias vector.
+        It is particularly useful when dealing with layers of models that need to be
+        partially extracted based on certain indices.
+
+        :param father_layer: The nn.Conv2d layer of the model from which the parameters are to be extracted.
+        :param out_index: A list of tuples specifying the start and end indices
+        for the rows in the weight matrix to be retrieved.
+        :param in_index: A list of tuples specifying the start and end indices
+        for the columns in the weight matrix to be retrieved.
+
+        :return: A tuple containing the extracted weight tensor and bias tensor.
+        The bias tensor would be None if the original layer does not have a bias.
+        """
         weight = father_layer.weight[out_index[0]: out_index[1], in_index[0]: in_index[1]].clone()
         bias = None
         if father_layer.bias is not None:
             bias = father_layer.bias[out_index[0]: out_index[1]].clone()
         return weight, bias
 
-    def set_subset_parameters(self: Self, weight: torch.Tensor, bias: torch.Tensor, out_index: List[Tuple[int, int]], in_index: List[Tuple[int, int]]) -> None:
+    def set_subset_parameters(self: Self, weight: torch.Tensor, bias: torch.Tensor,
+                              out_index: List[Tuple[int, int]], in_index: List[Tuple[int, int]]) -> None:
+        """
+        Sets the parameters of a subset of the model's weights and biases.
+
+        This method is used to update a specific block of the model's weight matrix and the corresponding bias vector.
+        It is particularly useful when dealing with layers of models that need to be
+        partially updated based on certain indices.
+
+        :param weight: A torch.Tensor containing the weight values to be set in the specified subset.
+        :param bias: A torch.Tensor containing the bias values to be set in the specified subset.
+        If `None`, the bias will not be updated.
+        :param out_index: A list of tuples specifying the start and end indices
+        for the rows in the weight matrix to be updated.
+        :param in_index: A list of tuples specifying the start and end indices
+        for the columns in the weight matrix to be updated.
+
+        :return: None. The method updates the weight and bias in-place.
+        """
         self.weight[out_index[0]: out_index[1], in_index[0]: in_index[1]] = weight
         if bias is not None:
             self.bias[out_index[0]: out_index[1]] = bias
@@ -108,26 +184,3 @@ class SSConv2d(nn.Conv2d):
             return Fraction(1, 1)
         numerator, denominator = map(int, fraction_str.split('/'))
         return Fraction(numerator, denominator)
-
-
-if __name__ == '__main__':
-    # test_monitor example 1
-    conv1 = SSConv2d(in_channels=4, out_channels=8, kernel_size=3, padding=1)
-    conv2 = SSConv2d(in_channels=4, out_channels=8, kernel_size=3, padding=1,
-                     in_channels_ranges=('0', '1/2'), out_channels_ranges=('1/2', '1'))
-    conv2.reset_parameters_from_father_layer(conv1)
-    x = torch.rand([1, 4, 32, 32])
-    print(conv1(x).shape)
-    x = torch.rand([1, 2, 32, 32])
-    print(conv2(x).shape)
-
-    # test_monitor example 2
-    conv1 = SSConv2d(in_channels=4, out_channels=8, kernel_size=3, padding=1)
-    conv2 = SSConv2d(in_channels=4, out_channels=8, kernel_size=3, padding=1,
-                     in_channels_ranges=[('0', '1/4'), ('2/4', '3/4')],
-                     out_channels_ranges=[('1/8', '3/8'), ('4/8', '5/8'), ('6/8', '7/8')])
-    conv2.reset_parameters_from_father_layer(conv1)
-    x = torch.rand([1, 4, 32, 32])
-    print(conv1(x).shape)
-    x = torch.rand([1, 2, 32, 32])
-    print(conv2(x).shape)

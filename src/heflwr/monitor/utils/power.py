@@ -1,5 +1,5 @@
-import subprocess
 import re
+import subprocess
 
 
 def get_jetson_model():
@@ -56,9 +56,12 @@ class PowerMonitor:
                 power_data = self._extract_power_dict(first_line)
                 """
                 `Jetson stats` for jetson devices.
-                See https://docs.nvidia.com/jetson/archives/r35.4.1/DeveloperGuide/text/SD/PlatformPowerAndPerformance.html
-                Orin Series: https://docs.nvidia.com/jetson/archives/r35.5.0/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#jetson-orin-nx-series-and-jetson-orin-nano-series
-                Xavier Series: https://docs.nvidia.com/jetson/archives/r35.4.1/DeveloperGuide/text/SD/PlatformPowerAndPerformance/JetsonXavierNxSeriesAndJetsonAgxXavierSeries.html#sd-platformpowerandperformance-jetsonxaviernxandjetsonagxxavier
+                See:
+                https://docs.nvidia.com/jetson/archives/r35.4.1/DeveloperGuide/text/SD/PlatformPowerAndPerformance.html
+                Orin Series: 
+                https://docs.nvidia.com/jetson/archives/r35.5.0/DeveloperGuide/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#jetson-orin-nx-series-and-jetson-orin-nano-series
+                Xavier Series: 
+                https://docs.nvidia.com/jetson/archives/r35.4.1/DeveloperGuide/text/SD/PlatformPowerAndPerformance/JetsonXavierNxSeriesAndJetsonAgxXavierSeries.html#sd-platformpowerandperformance-jetsonxaviernxandjetsonagxxavier
                 """
                 if self.jetson_model in ('Jetson-AGX\x00', ):
                     # power_data = {

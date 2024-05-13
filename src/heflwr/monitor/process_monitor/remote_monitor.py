@@ -1,11 +1,11 @@
 import os
 import time
 import multiprocessing
+
 import psutil
-
 import uuid
-from ...log.logger import logger, configure
 
+from ...log.logger import logger, configure
 from ..utils.network import NetTrafficMonitor
 from ..utils.power import PowerMonitor
 

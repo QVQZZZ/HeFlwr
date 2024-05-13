@@ -1,8 +1,10 @@
 import os
 import time
 import multiprocessing
+
 import psutil
 from prometheus_client import start_http_server, Gauge
+
 from ..utils.network import NetTrafficMonitor
 from ..utils.power import PowerMonitor
 

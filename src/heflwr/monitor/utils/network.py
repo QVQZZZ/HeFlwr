@@ -1,5 +1,6 @@
-import psutil
 import time
+
+import psutil
 
 
 class NetTrafficMonitor:
@@ -29,4 +30,3 @@ class NetTrafficMonitor:
         diff_sent, diff_recv = curr_sent - self.last_sent, curr_recv - self.last_recv
         self.last_sent, self.last_recv = curr_sent, curr_recv
         return diff_sent, diff_recv
-

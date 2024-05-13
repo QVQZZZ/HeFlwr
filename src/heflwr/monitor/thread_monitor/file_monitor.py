@@ -1,8 +1,10 @@
 import os
 import time
 import threading
-import psutil
 import datetime
+
+import psutil
+
 from ..utils.network import NetTrafficMonitor
 from ..utils.power import PowerMonitor
 
