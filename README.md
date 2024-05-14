@@ -20,7 +20,7 @@ the large-scale deployment of federated learning still faces the challenge of sy
 i.e., significant differences in computing ability,
 storage capacity, network bandwidth, and power consumption limits among various devices.
 Numerous efforts have attempted to address this problem in simulated environments,
-such as <a href="#heterofl">HeteroFL</a> and <a href="#fjord">FjORD</a>.
+such as <a href="#heterofl">HeteroFL</a> and <a href="#fjord">Fjord</a>.
 
 HeFlwr aims to provide researchers and developers with a convenient tool for studying system heterogeneity in real-world environments.
 HeFlwr's design follows some guiding principles:
@@ -42,9 +42,11 @@ pip install torch torchvision
 ```
 
 ## Quick Start🎉
-``` python
-import heflwr
-```
+For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](./examples/heterofl/README.md)
+
+For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](./examples/fjord/README.md)
+
+
 
 ## References📕
 <strong><p id="heterofl">[1] Enmao Diao, Jie Ding, and Vahid Tarokh. Heterofl: Computation and communication efficient federated learning for heterogeneous clients. In _International Conference on Learning Representations_, 2021.</p></strong>

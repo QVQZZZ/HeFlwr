@@ -36,9 +36,10 @@ pip install torch torchvision
 ```
 
 ## 快速开始🎉
-``` python
-import heflwr
-```
+For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](./examples/heterofl/README.zh.md)
+
+For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](./examples/fjord/README.zh.md)
+
 
 ## 补充
 
