@@ -13,7 +13,7 @@ It provides a simple interface for researching system heterogeneity in federated
 HeFlwr can customize models based on differences in client's computing capabilities and storage capacities,
 and monitor their resource usage during training.
 
-## 📜Introduction
+## Introduction📜
 Federated Learning uses distributed devices to collaboratively train models while ensuring data privacy.
 Federated learning has shown potential in multiple scenarios. However,
 the large-scale deployment of federated learning still faces the challenge of system heterogeneity,
@@ -29,7 +29,7 @@ HeFlwr's design follows some guiding principles:
 - Resource monitoring: HeFlwr is designed for real environments. Developers can easily deploy federated learning among real devices and monitor the resource usage of these devices.
 - Scalability: Many modules of HeFlwr can be expanded or overridden according to actual needs.
 
-## 🚀Installation
+## Installation🚀
 You can install HeFlwr through `pip`:
 ``` shell
 pip install heflwr
@@ -41,11 +41,11 @@ pip install flwr
 pip install torch torchvision
 ```
 
-## 🎉Quick Start
+## Quick Start🎉
 ``` python
 import heflwr
 ```
 
-## References
+## References📕
 <strong><p id="heterofl">[1] Enmao Diao, Jie Ding, and Vahid Tarokh. Heterofl: Computation and communication efficient federated learning for heterogeneous clients. In _International Conference on Learning Representations_, 2021.</p></strong>
 <strong><p id="fjord">[2] Horvath, S., Laskaridis, S., Almeida, M., Leontiadis, I., Venieris, S. I., and Lane, N. D. Fjord: Fair and accurate federated learning under heterogeneous targets with ordered dropout. _35th Conference on Neural Information Processing Systems (NeurIPS)._, 2021.</p></strong>
