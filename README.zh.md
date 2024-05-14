@@ -36,9 +36,9 @@ pip install torch torchvision
 ```
 
 ## 快速开始🎉
-For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](./examples/heterofl/README.zh.md)
+对于 <a href="#heterofl">HeteroFL</a>，请查看：[HeteroFL Implementation](./examples/heterofl/README.zh.md)
 
-For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](./examples/fjord/README.zh.md)
+对于 <a href="#fjord">Fjord</a>，请查看：[Fjord Implementation](./examples/fjord/README.zh.md)
 
 
 ## 补充
