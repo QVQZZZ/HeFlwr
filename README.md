@@ -1,5 +1,5 @@
 <div align="center">
-    <img src='pictures/logo.svg' width="250" alt="logo">
+    <img src='pictures/heflwr.png' width="250" alt="logo">
 </div>
 <h1 align="center"> HeFlwr: A Federated Learning Framework for Heterogeneous Devices </h1>
 <div align="center">
