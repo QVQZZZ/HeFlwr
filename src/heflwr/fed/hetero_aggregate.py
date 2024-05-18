@@ -8,7 +8,7 @@ from flwr.common.typing import Parameters, FitRes
 from flwr.server.client_proxy import ClientProxy
 
 from .aggregate import aggregate_layer
-from ..nn import SSLinear, SSConv2d
+from ..nn import SSLinear, SSConv2d, SUPPORT_LAYER
 from ..log.logger import logger
 
 
@@ -35,7 +35,7 @@ def extract(parameters: Parameters, client_net: nn.Module, server_net: nn.Module
         server_net.load_state_dict(global_dict)
 
         for layer, father_layer in zip(client_net.modules(), server_net.modules()):
-            if hasattr(layer, 'reset_parameters_from_father_layer'):
+            if isinstance(layer, SUPPORT_LAYER):
                 layer.reset_parameters_from_father_layer(father_layer)
 
         array_list: List[np.ndarray] = [_.numpy() for _ in list(client_net.parameters())]
@@ -76,7 +76,7 @@ def merge(results: List[Tuple[ClientProxy, FitRes]], client_nets: List[nn.Module
             client_net.load_state_dict(client_dict)
 
         for layer_name, layer in dict(server_net.named_modules()).items():
-            if isinstance(layer, Union[SSConv2d, SSLinear]):
+            if isinstance(layer, SUPPORT_LAYER):
                 client_layers = [dict(client_net.named_modules())[layer_name] for client_net in client_nets]
                 aggregate_layer(layer, client_layers, num_examples_list)
             else:
