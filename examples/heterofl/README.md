@@ -18,4 +18,4 @@ You need to replace {N} with {1|2|3|4}, where the number controls the neural net
 ## Viewing Results
 You can get the training process loss and acc data on the device terminal running the server.
 
-A `hetero_test_log.txt` file will be generated in the running directory of each device, which records the device load information during the training process.
+A `heterofl_test_log.txt` file will be generated in the running directory of each device, which records the device load information during the training process.

@@ -18,4 +18,4 @@ git clone --depth=1 https://github.com/QVQZZZ/HeFlwr.git \
 ## 查看结果
 在运行服务器的设备终端上可以获取到训练过程中的 loss 和 acc 数据。
 
-在每个设备的运行目录下会生成 `hetero_test_log.txt` 文件，该文件记录了训练过程中的设备负载信息。
+在每个设备的运行目录下会生成 `heterofl_test_log.txt` 文件，该文件记录了训练过程中的设备负载信息。

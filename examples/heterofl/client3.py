@@ -53,7 +53,7 @@ class FlClient(fl.client.NumPyClient):
 
 
 if __name__ == '__main__':
-    monitor = FileMonitor(file='./hetero_test_log.txt')
+    monitor = FileMonitor(file='./heterofl_test_log.txt')
     monitor.start()
     net = Net(p='3/4').to(DEVICE)
     train_loader, test_loader, num_examples = load_data()
