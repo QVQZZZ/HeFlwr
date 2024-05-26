@@ -3,6 +3,7 @@ from typing import Union, List
 import torch
 
 from ..nn import SSLinear, SSConv2d
+from ..nn import SUPPORT_LAYER
 
 
 # Function to aggregate weight into the final result weight with weighted average
@@ -42,6 +43,7 @@ def aggregate_weight(global_matrix, matrix, row_index, col_index, weight, total_
                 )
                 total_weights[row_start:row_end, col_start:col_end] += weight
 
+
 # Function to aggregate bias into the final result bias with weighted average
 def aggregate_bias(global_bias, bias, row_index, weight, total_weights):
     """
@@ -76,8 +78,8 @@ def aggregate_bias(global_bias, bias, row_index, weight, total_weights):
             total_weights[start_int:end_int] += weight
 
 
-def aggregate_layer(global_layer: Union[SSLinear, SSConv2d],
-                    subset_layers: List[Union[SSLinear, SSConv2d]],
+def aggregate_layer(global_layer: SUPPORT_LAYER,
+                    subset_layers: List[SUPPORT_LAYER],
                     weights: List[int]) -> None:
     """
     Performs aggregation of layer parameters from multiple subset layers into a global layer,

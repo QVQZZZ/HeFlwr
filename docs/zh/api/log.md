@@ -46,7 +46,7 @@ log(INFO, "hello, world!")
 若 `host` 不为 None, 且 `simple` 被设置为 `True`, 则日志将以简略格式发送到远程服务器的 `/simple_log` URL 下, 以降低网络传输开销.
 
 
-调用 `configure` 函数可以添加`FileHandler` 和 / 或 `HTTPHandler` 到全局日志器中, 例如:
+调用 `configure` 函数可以添加 `FileHandler` 和/或 `HTTPHandler` 到全局日志器中, 例如:
 
 ```python
 from heflwr.log import logger, configure
@@ -58,4 +58,4 @@ configure(identifier="client-A", file="logs/app.log", host="127.0.0.1:5000", sim
 
 logger.info("hello, world!")
 ```
-通过这种方式, 日志不仅可以输出到标准输出, 还会输出到对应文件和 / 或 HTTP 服务器.
+通过这种方式, 日志不仅可以输出到标准输出, 还会输出到对应文件和/或 HTTP 服务器.

@@ -1,4 +1,4 @@
-## heflwr.monitor
+# heflwr.monitor
 
 `heflwr.monitor` 模块为为任何 Python 程序的执行提供了资源监控的功能.
 在资源受限的深度学习和物联网联邦学习的场景下, 训练设备面临着有限的计算 / 存储 / 网络 / 电池等资源,
@@ -100,7 +100,7 @@ from heflwr.monitor.thread_monitor import RemoteMonitor
     ```
 以上的初始化方式对于 `process_monitor` 和 `thread_monitor` 全部适用.
 
-有关 `RemoteMonitor` 初始化参数 `identifier` 和 `simple` 的详细信息, 请查看 [heflwr.log]().
+有关 `RemoteMonitor` 初始化参数 `identifier` 和 `simple` 的详细信息, 请查看 [`heflwr.log` 文档](TODO).
 
 ## 设置监控指标
 `heflwr.monitor` 支持监控四类指标:

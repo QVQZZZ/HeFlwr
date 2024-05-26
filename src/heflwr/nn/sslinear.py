@@ -17,7 +17,7 @@ Layer_Range = Union[Interval, Intervals]
 class SSLinear(nn.Linear):
     def __init__(self: Self, in_features: int, out_features: int, bias: bool = True,
                  in_features_ranges: Layer_Range = ('0', '1'),
-                 out_features_ranges: Layer_Range = ('0', '1')):
+                 out_features_ranges: Layer_Range = ('0', '1')) -> None:
 
         # if in_channels_ranges/out_channels_ranges belong to Interval, then convert into Intervals.
         if isinstance(in_features_ranges[0], str):

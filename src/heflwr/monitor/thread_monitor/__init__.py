@@ -1,3 +1,3 @@
-from . import file_monitor
-from . import prometheus_monitor
-from . import remote_monitor
+from .file_monitor import FileMonitor
+from .prometheus_monitor import PrometheusMonitor
+from .remote_monitor import RemoteMonitor

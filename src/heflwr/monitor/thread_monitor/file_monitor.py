@@ -21,7 +21,7 @@ class FileMonitor:
             'cpu': True,
             'memory': True,
             'network': True,
-            'power': True,
+            'power': False,
         }
         self._stats = dict({
             'cpu_usage': list(),

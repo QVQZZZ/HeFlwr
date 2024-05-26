@@ -2,7 +2,7 @@ import torch.nn as nn
 
 
 class Scaler(nn.Module):
-    def __init__(self, rate, scale):
+    def __init__(self, rate, scale) -> None:
         super().__init__()
         if scale:
             self.rate = rate

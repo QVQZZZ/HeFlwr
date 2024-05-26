@@ -21,7 +21,7 @@ class PrometheusMonitor:
             'cpu': True,
             'memory': True,
             'network': True,
-            'power': True,
+            'power': False,
         }
         manager = multiprocessing.Manager()
         self._stats = manager.dict({

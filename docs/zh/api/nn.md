@@ -1,6 +1,6 @@
 # heflwr.nn
 
-`heflwr.nn` 模块为联邦学习提供经过[结构化剪枝](https://www.scaler.com/topics/pytorch/pytorch-pruning/)的神经网络, 并采用与 `torch.nn` 相似的神经网络层 API.
+`heflwr.nn` 模块为联邦学习提供经过[结构化剪枝](https://www.scaler.com/topics/pytorch/pytorch-pruning/)的神经网络, 并采用与 `torch.nn` 相似的神经网络层 APIs.
 通过 `heflwr.nn` 模块, 可以轻松地创建多个父网络的剪枝网络, 这些剪枝网络可以在资源受限的客户端上进行训练.
 同时, 剪枝后的网络可以从父网络的对应位置获取参数, 以支持联邦学习服务器向各个客户端分发它.
 
@@ -12,7 +12,7 @@
 同时 `heflwr.nn` 还为联邦学习提供了特殊的支持, 无论你使用的是 PyTorch 进行模拟联邦学习, 还是采用 Flower 等专业的联邦学习框架.
 (这意味着你不需要下载或使用 Flower, 也仍然可以使用 `heflwr.nn` 来构建你的异构联邦学习程序)
 
-`heflwr.nn` 模块提供 `SSConv2d`, `SSLinear`, `SSBatchNorm2d` 等模块.
+`heflwr.nn` 模块提供 `SSConv2d`, `SSLinear`, `SSBatchNorm2d` 等模块 (这些模块构成类型 `SUPPORT_LAYER`).
 其中前缀 `SS` 是术语 `SubSet` 的缩写, 该术语来自一篇研究联邦学习中系统异构型的综述论文 [Federated Learning for Computationally-Constrained
  Heterogeneous Devices: A Survey](https://arxiv.org/abs/2307.09182).
 对于 `torch.nn` 中不包含显式参数的模块 (如`torch.nn.MaxPool2d`), `heflwr.nn` 不提供对应的 `SSLayer` 实现.
@@ -68,8 +68,7 @@
   - 参数
     - `self`: 当前对象. 
     - `father_layer`: 要继承参数的父线性层. 可以是 `flwr.nn.SSLinear` 或 `torch.nn.Linear`.
-  - 返回
-    - `None`
+  - 返回 - `None`.
 
 ## SSConv2d
 > ```python
@@ -109,5 +108,4 @@
   - 参数
     - `self`: 当前对象.
     - `father_layer`: 要继承参数的父卷积层. 可以是 `flwr.nn.SSConv2d` 或 `torch.nn.Conv2d`.
-  - 返回
-    - `None`
+  - 返回 - `None`.

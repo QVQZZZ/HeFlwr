@@ -5,7 +5,7 @@ import threading
 import psutil
 import uuid
 
-from ...log.logger import logger, configure
+from ...log import logger, configure
 from ..utils.network import NetTrafficMonitor
 from ..utils.power import PowerMonitor
 
@@ -22,7 +22,7 @@ class RemoteMonitor:
             'cpu': True,
             'memory': True,
             'network': True,
-            'power': True,
+            'power': False,
         }
         self._stats = dict({
             'cpu_usage': list(),

@@ -18,7 +18,7 @@ class SSConv2d(nn.Conv2d):
     def __init__(self: Self, in_channels: int, out_channels: int, kernel_size: Union[int, Tuple[int, int]],
                  stride: Union[int, Tuple[int, int]] = 1, padding: Union[int, Tuple[int, int]] = 0,
                  dilation: Union[int, Tuple[int, int]] = 1, groups: int = 1, bias: bool = True,
-                 in_channels_ranges: Layer_Range = ('0', '1'), out_channels_ranges: Layer_Range = ('0', '1')):
+                 in_channels_ranges: Layer_Range = ('0', '1'), out_channels_ranges: Layer_Range = ('0', '1')) -> None:
 
         # if in_channels_ranges/out_channels_ranges belong to Interval, then convert into Intervals.
         if isinstance(in_channels_ranges[0], str):

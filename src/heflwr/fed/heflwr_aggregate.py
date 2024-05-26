@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple
+from typing import List, Tuple
 
 import numpy as np
 import torch
@@ -8,8 +8,8 @@ from flwr.common.typing import Parameters, FitRes
 from flwr.server.client_proxy import ClientProxy
 
 from .aggregate import aggregate_layer
-from ..nn import SSLinear, SSConv2d, SUPPORT_LAYER
-from ..log.logger import logger
+from ..nn import SUPPORT_LAYER
+from ..log import logger
 
 
 def extract(parameters: Parameters, client_net: nn.Module, server_net: nn.Module) -> Parameters:
