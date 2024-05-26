@@ -5,7 +5,7 @@
 
 <div align="center">
 
-[English](https://github.com/QVQZZZ/HeFlwr/blob/main/README.zh.md) | 简体中文
+[English](https://github.com/QVQZZZ/HeFlwr/blob/main/README.md) | 简体中文
 </div>
 
 
