@@ -25,10 +25,10 @@ def set_parameters(net, parameters: List[np.ndarray]):
     net.load_state_dict(state_dict, strict=True)
 
 
-class HeteroFL(FedAvg):
+class Fjord(FedAvg):
     def __repr__(self) -> str:
         """ Compute a string representation of the strategy. """
-        rep = f"HeteroFL(accept_failures={self.accept_failures})"
+        rep = f"Fjord(accept_failures={self.accept_failures})"
         return rep
 
     def initialize_parameters(

@@ -10,7 +10,8 @@ from flwr.server import ClientManager
 from flwr.server.client_proxy import ClientProxy
 from flwr.server.strategy import FedAvg
 
-from heflwr.fed.hetero_aggregate import extract, merge
+from heflwr.fed.heflwr_aggregate import extract, merge
+from heflwr.fed import extract, merge
 
 from cifarcnn import CifarCNN as Net
 

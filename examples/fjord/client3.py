@@ -6,8 +6,6 @@ import numpy as np
 import torch
 import flwr as fl
 
-from heflwr.monitor.process_monitor import FileMonitor
-
 from dataloaders import load_data
 from cifarcnn import CifarCNN as Net
 from utils import DEVICE, train, test
@@ -53,10 +51,11 @@ class FlClient(fl.client.NumPyClient):
 
 
 if __name__ == '__main__':
+    from heflwr.monitor.process_monitor.file_monitor import FileMonitor
     monitor = FileMonitor(file='./hetero_test_log.txt')
     monitor.start()
-    net = Net(p='1').to(DEVICE)
+    net = Net(p='3/4').to(DEVICE)
     train_loader, test_loader, num_examples = load_data()
-    client = FlClient(4, net, train_loader, test_loader, num_examples)
+    client = FlClient(3, net, train_loader, test_loader, num_examples)
     fl.client.start_numpy_client(server_address="127.0.0.1:8080", client=client)
     monitor.stop()
