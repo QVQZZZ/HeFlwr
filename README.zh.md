@@ -12,8 +12,10 @@
 HeFlwr 是一个用于在真实环境中部署联邦学习的框架。
 它为联邦学习中的系统异构性的研究提供简单的接口。
 HeFlwr 能根据客户端在计算能力和存储容量等方面的差异定制模型，并在训练过程中监控其资源使用情况。
+
 HeFlwr 的文档可以在[这里](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/zh/home.md)找到。
-HeFlwr 的 Wiki可以在[这里](https://github.com/QVQZZZ/HeFlwr/wiki)找到。
+
+HeFlwr 的 Wiki 可以在[这里](https://github.com/QVQZZZ/HeFlwr/wiki)找到。
 
 ## 简介📜
 联邦学习利用分布式的设备协同训练模型，同时确保数据的隐私性，联邦学习已在多个场景中展现了潜力。
