@@ -20,7 +20,7 @@ HeFlwr 的 Wiki 可以在[这里](https://github.com/QVQZZZ/HeFlwr/wiki)找到�
 ## 简介📜
 联邦学习利用分布式的设备协同训练模型，同时确保数据的隐私性，联邦学习已在多个场景中展现了潜力。
 然而，大规模部署联邦学习仍着面临系统异构性的挑战，即各设备在计算能力、存储容量、网络带宽和功耗限制等方面存在显著差异。
-已有许多工作尝试在模拟环境下解决该问题，如 <a href="#heterofl">HeteroFL</a> 和 <a href="#fjord">FjORD</a>。
+已有许多工作尝试在模拟环境下解决该问题，如 <a href="#heterofl">HeteroFL</a> 和 <a href="#fedrolex">FedRolex</a>。
 
 HeFlwr 旨在为研究人员和开发者提供一个便利的工具，用于在真实环境中研究系统异构性。HeFlwr 的设计遵循一些指导原则：
 - 接口简洁：HeFlwr 的设计理念是不引入额外的学习成本，其接口在很大程度上兼容或类似于 PyTorch 和 Flower。
@@ -50,5 +50,8 @@ pip install psutil
 
 
 ## 参考文献📕
-<strong><p id="heterofl">[1] Enmao Diao, Jie Ding, and Vahid Tarokh. Heterofl: Computation and communication efficient federated learning for heterogeneous clients. In _International Conference on Learning Representations_, 2021.</p></strong>
-<strong><p id="fjord">[2] Horvath, S., Laskaridis, S., Almeida, M., Leontiadis, I., Venieris, S. I., and Lane, N. D. Fjord: Fair and accurate federated learning under heterogeneous targets with ordered dropout. _35th Conference on Neural Information Processing Systems (NeurIPS)._, 2021.</p></strong>
+<strong><p id="heterofl">[1] Enmao Diao, Jie Ding, and Vahid Tarokh. 2020. HeteroFL: Computation and communication efficient federated learning for heterogeneous clients. In _International Conference on Learning Representations (ICLR)_, Vol. 1. ICLR, online, 1.</p></strong>
+
+<strong><p id="fedrolex">[2] Samiul Alam, Luyang Liu, Ming Yan, and Mi Zhang. 2022. FedRolex: Model-Heterogeneous Federated Learning with Rolling Sub-Model Extraction. In _Advances in Neural Information Processing Systems_, Vol. 35. Curran Associates, Inc., New Orleans, United States, 158–171.</p></strong>
+
+<strong><p id="fjord">[3] Samuel Horvath, Stefanos Laskaridis, Mario Almeida, Ilias Leontiadis, Stylianos Venieris, and Nicholas Lane. 2021. Fjord: Fair and accurate federated learning under heterogeneous targets with ordered dropout. In _Advances in Neural Information Processing Systems_, Vol. 34. NeurIPS, online, 1–12.</p></strong>
