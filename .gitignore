@@ -4,3 +4,4 @@ src/heflwr.egg-info
 .idea
 __pycache__
 examples/data
+ssbatchnorm2d.py

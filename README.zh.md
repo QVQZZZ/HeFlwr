@@ -1,5 +1,5 @@
 <div align="center">
-    <img src='pictures/heflwr.png' width="250" alt="logo">
+    <img src='pictures/logo.svg' width="250" alt="logo">
 </div>
 <h1 align="center"> HeFlwr: 用于异构设备的联邦学习框架 </h1>
 
@@ -12,7 +12,7 @@
 HeFlwr 是一个用于在真实环境中部署联邦学习的框架。
 它为联邦学习中的系统异构性的研究提供简单的接口。
 HeFlwr 能根据客户端在计算能力和存储容量等方面的差异定制模型，并在训练过程中监控其资源使用情况。
-HeFlwr 的文档可以在[这里](./docs/zh/navigation.md)找到。
+HeFlwr 的文档可以在[这里](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/zh/home.md)找到。
 
 ## 简介📜
 联邦学习利用分布式的设备协同训练模型，同时确保数据的隐私性，联邦学习已在多个场景中展现了潜力。
@@ -31,16 +31,17 @@ HeFlwr 旨在为研究人员和开发者提供一个便利的工具，用于在�
 ``` shell
 pip install heflwr
 ```
-为了充分利用 HeFlwr 的所有功能，请确保 PyTorch 和 Flower 已正确安装在您的系统中：
+为了充分利用 HeFlwr 的所有功能，请确保 PyTorch, Flower 以及 Psutil 已正确安装在您的系统中：
 ``` shell
 pip install flwr
 pip install torch torchvision
+pip install psutil
 ```
 
 ## 快速开始🎉
-对于 <a href="#heterofl">HeteroFL</a>，请查看：[HeteroFL Implementation](./examples/heterofl/README.zh.md)
+对于 <a href="#heterofl">HeteroFL</a>，请查看：[HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.zh.md)
 
-对于 <a href="#fjord">Fjord</a>，请查看：[Fjord Implementation](./examples/fjord/README.zh.md)
+对于 <a href="#fjord">Fjord</a>，请查看：[Fjord Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fjord/README.zh.md)
 
 
 ## 参考文献📕

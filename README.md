@@ -11,7 +11,7 @@ English | [简体中文](./README.zh.md)
 HeFlwr is a framework for deploying federated learning in real-world environments.
 It provides a simple interface for researching system heterogeneity in federated learning.
 HeFlwr can customize models based on differences in client's computing capabilities and storage capacities,
-and monitor their resource usage during training. The document for HeFlwr can be found [here](./docs/en/navigation.md).
+and monitor their resource usage during training. The documentation for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/en/home.md).
 
 
 ## Introduction📜
@@ -36,16 +36,17 @@ You can install HeFlwr through `pip`:
 pip install heflwr
 ```
 To take full advantage of all the features of HeFlwr,
-please ensure that PyTorch and Flower are correctly installed on your system:
+please ensure that PyTorch, Flower and Psutil are correctly installed on your system:
 ``` shell
 pip install flwr
 pip install torch torchvision
+pip install psutil
 ```
 
 ## Quick Start🎉
-For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](./examples/heterofl/README.md)
+For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.md)
 
-For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](./examples/fjord/README.md)
+For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fjord/README.md)
 
 
 
