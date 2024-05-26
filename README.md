@@ -50,6 +50,8 @@ pip install psutil
 ## Quick Start🎉
 For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.md)
 
+For <a href="#fedrolex">FedRolex</a>, see: [FedRolex Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedrolex/README.md)
+
 For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fjord/README.md)
 
 

@@ -44,6 +44,8 @@ pip install psutil
 ## 快速开始🎉
 对于 <a href="#heterofl">HeteroFL</a>，请查看：[HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.zh.md)
 
+对于 <a href="#fedrolex">FedRolex</a>，请查看：[FedRolex Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedrolex/README.zh.md)
+
 对于 <a href="#fjord">Fjord</a>，请查看：[Fjord Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fjord/README.zh.md)
 
 
