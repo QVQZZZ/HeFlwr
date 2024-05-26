@@ -1,11 +1,11 @@
 <div align="center">
-    <img src='pictures/logo.svg' width="250" alt="logo">
+    <img src='https://github.com/QVQZZZ/HeFlwr/blob/main/pictures/logo.svg' width="250" alt="logo">
 </div>
 <h1 align="center"> HeFlwr: 用于异构设备的联邦学习框架 </h1>
 
 <div align="center">
 
-[English](./README.md) | 简体中文
+[English](https://github.com/QVQZZZ/HeFlwr/blob/main/README.zh.md) | 简体中文
 </div>
 
 

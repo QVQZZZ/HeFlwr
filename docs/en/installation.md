@@ -12,7 +12,7 @@ pip install heflwr
 ### Installing Flower and PyTorch
 For the full functionality of HeFlwr, it is essential to have Flower, PyTorch and Psutil installed. Follow these steps to install:
 
-1. Install Flower using pip:
+1. Install Flower using `pip`:
     ``` shell
     pip install flwr
     ```
@@ -31,16 +31,14 @@ For the full functionality of HeFlwr, it is essential to have Flower, PyTorch an
     ```
 
 ### Verifying the Installation
-To verify that HeFlwr, Flower, and PyTorch have been successfully installed, you can run the following command in your terminal:
+To verify that HeFlwr, Flower, PyTorch and Psutil have been successfully installed, you can run the following command in your terminal:
 ``` shell
 python -c "import heflwr; print(heflwr.__version__)"
 python -c "import flwr; print(flwr.__version__)"
 python -c "import torch; print(torch.__version__)"
 ```
-Each command should return the version number of HeFlwr, Flower, and PyTorch, indicating that they have been successfully installed on your system.
+These commands should return the version numbers of HeFlwr, Flower, PyTorch and Psutil, indicating that they have been successfully installed on your system.
 
 ### Next Steps
 After successfully installing HeFlwr, Flower, PyTorch and Psutil, you may want to:
-- Visit HeFlwr's [homepage]() for an overview of the design background and guiding principles.
-- Check out the [Getting Started]() guide to begin using HeFlwr.
-- Explore the [Project Structure]() to familiarize yourself with HeFlwr's components.
+- Visit HeFlwr's [homepage](https://github.com/QVQZZZ/HeFlwr) for an overview of the design background and guiding principles.
