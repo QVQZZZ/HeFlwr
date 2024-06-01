@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from utils import Layer_Range
+from .utils import Layer_Range
 
 
 class SSBatchNorm2d(nn.BatchNorm2d):
