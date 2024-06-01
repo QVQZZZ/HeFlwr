@@ -6,12 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-# For example, (0, 0.5) represents extracting the first 50%.
-Interval = Tuple[str, str]
-# For example, [(0, 0.2), (0.5, 0.8)] also represents extracting 50%, but at different positions.
-Intervals = List[Tuple[str, str]]
-Layer_Range = Union[Interval, Intervals]
+from utils import Layer_Range
 
 
 class SSConv2d(nn.Conv2d):
@@ -119,8 +114,8 @@ class SSConv2d(nn.Conv2d):
         return ret_indices
 
     @staticmethod
-    def get_subset_parameters(father_layer: nn.Conv2d, out_index: List[Tuple[int, int]],
-                              in_index: List[Tuple[int, int]]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
+    def get_subset_parameters(father_layer: nn.Conv2d, out_index: Tuple[int, int],
+                              in_index: Tuple[int, int]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
         """
         Retrieves the parameters of a subset of the model's weights and biases.
 
@@ -129,9 +124,9 @@ class SSConv2d(nn.Conv2d):
         partially extracted based on certain indices.
 
         :param father_layer: The nn.Conv2d layer of the model from which the parameters are to be extracted.
-        :param out_index: A list of tuples specifying the start and end indices
+        :param out_index: A tuple specifying the start and end index
         for the rows in the weight matrix to be retrieved.
-        :param in_index: A list of tuples specifying the start and end indices
+        :param in_index: A tuple specifying the start and end index
         for the columns in the weight matrix to be retrieved.
 
         :return: A tuple containing the extracted weight tensor and bias tensor.
@@ -144,7 +139,7 @@ class SSConv2d(nn.Conv2d):
         return weight, bias
 
     def set_subset_parameters(self: Self, weight: torch.Tensor, bias: torch.Tensor,
-                              out_index: List[Tuple[int, int]], in_index: List[Tuple[int, int]]) -> None:
+                              out_index: Tuple[int, int], in_index: Tuple[int, int]) -> None:
         """
         Sets the parameters of a subset of the model's weights and biases.
 
@@ -155,9 +150,9 @@ class SSConv2d(nn.Conv2d):
         :param weight: A torch.Tensor containing the weight values to be set in the specified subset.
         :param bias: A torch.Tensor containing the bias values to be set in the specified subset.
         If `None`, the bias will not be updated.
-        :param out_index: A list of tuples specifying the start and end indices
+        :param out_index: A tuple specifying the start and end index
         for the rows in the weight matrix to be updated.
-        :param in_index: A list of tuples specifying the start and end indices
+        :param in_index: A tuple specifying the start and end index
         for the columns in the weight matrix to be updated.
 
         :return: None. The method updates the weight and bias in-place.

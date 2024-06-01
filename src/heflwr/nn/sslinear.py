@@ -6,12 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-# For example, (0, 0.5) represents extracting the first 50%.
-Interval = Tuple[str, str]
-# For example, [(0, 0.2), (0.5, 0.8)] also represents extracting 50%, but at different positions.
-Intervals = List[Tuple[str, str]]
-Layer_Range = Union[Interval, Intervals]
+from utils import Layer_Range
 
 
 class SSLinear(nn.Linear):
@@ -19,7 +14,7 @@ class SSLinear(nn.Linear):
                  in_features_ranges: Layer_Range = ('0', '1'),
                  out_features_ranges: Layer_Range = ('0', '1')) -> None:
 
-        # if in_channels_ranges/out_channels_ranges belong to Interval, then convert into Intervals.
+        # if in_features_ranges/out_features_ranges belong to Interval, then convert into Intervals.
         if isinstance(in_features_ranges[0], str):
             in_features_ranges = [in_features_ranges]
         if isinstance(out_features_ranges[0], str):
@@ -59,7 +54,7 @@ class SSLinear(nn.Linear):
         positions, and uses the `get_subset_parameters` and `set_subset_parameters` methods to transfer
         the parameters.
 
-        :param father_layer: The parent layer of type Self or nn.Conv2d from which the parameters are to be propagated.
+        :param father_layer: The parent layer of type Self or nn.Linear from which the parameters are to be propagated.
 
         :return: None. The method updates the parameters of the current layer in place.
         """
@@ -113,8 +108,8 @@ class SSLinear(nn.Linear):
         return ret_indices
 
     @staticmethod
-    def get_subset_parameters(father_layer: nn.Linear, out_index: List[Tuple[int, int]],
-                              in_index: List[Tuple[int, int]]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
+    def get_subset_parameters(father_layer: nn.Linear, out_index: Tuple[int, int],
+                              in_index: Tuple[int, int]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
         """
         Retrieves the parameters of a subset of the model's weights and biases.
 
@@ -122,10 +117,10 @@ class SSLinear(nn.Linear):
         It is particularly useful when dealing with layers of models that need to be
         partially extracted based on certain indices.
 
-        :param father_layer: The nn.Conv2d layer of the model from which the parameters are to be extracted.
-        :param out_index: A list of tuples specifying the start and end indices
+        :param father_layer: The nn.Linear layer of the model from which the parameters are to be extracted.
+        :param out_index: A tuple specifying the start and end index
         for the rows in the weight matrix to be retrieved.
-        :param in_index: A list of tuples specifying the start and end indices
+        :param in_index: A tuple specifying the start and end index
         for the columns in the weight matrix to be retrieved.
 
         :return: A tuple containing the extracted weight tensor and bias tensor.
@@ -138,7 +133,7 @@ class SSLinear(nn.Linear):
         return weight, bias
 
     def set_subset_parameters(self: Self, weight: torch.Tensor, bias: torch.Tensor,
-                              out_index: List[Tuple[int, int]], in_index: List[Tuple[int, int]]) -> None:
+                              out_index: Tuple[int, int], in_index: Tuple[int, int]) -> None:
         """
         Sets the parameters of a subset of the model's weights and biases.
 
@@ -149,9 +144,9 @@ class SSLinear(nn.Linear):
         :param weight: A torch.Tensor containing the weight values to be set in the specified subset.
         :param bias: A torch.Tensor containing the bias values to be set in the specified subset.
         If `None`, the bias will not be updated.
-        :param out_index: A list of tuples specifying the start and end indices
+        :param out_index: A tuple specifying the start and end index
         for the rows in the weight matrix to be updated.
-        :param in_index: A list of tuples specifying the start and end indices
+        :param in_index: A tuple specifying the start and end index
         for the columns in the weight matrix to be updated.
 
         :return: None. The method updates the weight and bias in-place.
@@ -178,4 +173,3 @@ class SSLinear(nn.Linear):
             return Fraction(1, 1)
         numerator, denominator = map(int, fraction_str.split('/'))
         return Fraction(numerator, denominator)
-
