@@ -1,8 +1,8 @@
-from typing import Union, List
+from typing import List
 
 import torch
 
-from ..nn import SSLinear, SSConv2d
+from ..nn import SSLinear, SSConv2d, SSBatchNorm2d
 from ..nn import SUPPORT_LAYER
 
 
@@ -83,10 +83,10 @@ def aggregate_layer(global_layer: SUPPORT_LAYER,
                     weights: List[int]) -> None:
     """
     Performs aggregation of layer parameters from multiple subset layers into a global layer,
-    taking into account specific layer types (SSLinear or SSConv2d).
+    taking into account specific layer types (SSLinear or SSConv2d or SSBatchNorm2d).
 
     This function aggregates parameters (weights and biases) from a collection of subset layers
-    (either SSLinear or SSConv2d) into a global layer of the same type.
+    (either SSLinear or SSConv2d or SSBatchNorm2d) into a global layer of the same type.
     The aggregation process involves a weighted update,
     where each subset layer's influence on the global layer is proportional to its associated weight.
 
@@ -103,6 +103,11 @@ def aggregate_layer(global_layer: SUPPORT_LAYER,
 
     for subset_layer, client_weight in zip(subset_layers, weights):
         weight, bias = subset_layer.weight, subset_layer.bias
+        if isinstance(subset_layer, SSBatchNorm2d):
+            row_index = subset_layer.features_ranges
+            aggregate_bias(global_weight, weight, row_index, client_weight, total_weights_weight)
+            aggregate_bias(global_bias, bias, row_index, client_weight, total_weights_bias)
+            continue
         if isinstance(subset_layer, SSLinear):
             row_index, col_index = subset_layer.out_features_ranges, subset_layer.in_features_ranges
         elif isinstance(subset_layer, SSConv2d):
@@ -111,3 +116,18 @@ def aggregate_layer(global_layer: SUPPORT_LAYER,
             raise TypeError(f'Unsupported type of layer {subset_layer}.')
         aggregate_weight(global_weight, weight, row_index, col_index, client_weight, total_weights_weight)
         aggregate_bias(global_bias, bias, row_index, client_weight, total_weights_bias)
+
+
+def distribute(client_net, server_net):
+    with torch.no_grad():
+        for layer, father_layer in zip(client_net.modules(), server_net.modules()):
+            if isinstance(layer, SUPPORT_LAYER):
+                layer.reset_parameters_from_father_layer(father_layer)
+
+
+def aggregate(weights, client_nets, server_net):
+    with torch.no_grad():
+        for layer_name, layer in dict(server_net.named_modules()).items():
+            if isinstance(layer, SUPPORT_LAYER):
+                client_layers = [dict(client_net.named_modules())[layer_name] for client_net in client_nets]
+                aggregate_layer(layer, client_layers, weights)

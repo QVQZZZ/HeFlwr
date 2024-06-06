@@ -16,7 +16,7 @@ class SSBatchNorm2d(nn.BatchNorm2d):
             eps: float = 1e-5,
             momentum: float = 0.1,
             affine: bool = True,
-            track_running_stats: bool = True,
+            track_running_stats: bool = False,
             device=None,
             dtype=None,
             features_ranges: Layer_Range = ('0', '1'),
@@ -152,7 +152,6 @@ class SSBatchNorm2d(nn.BatchNorm2d):
     @staticmethod
     def get_subset_parameters(father_layer: nn.BatchNorm2d,
                               index: List[Tuple[int, int]]) -> Tuple[torch.Tensor, Optional[torch.Tensor]]:
-        print(f'get_subset_parameters: {index}')
         """
         Retrieves the parameters of a subset of the model's weights and biases.
 
@@ -174,7 +173,6 @@ class SSBatchNorm2d(nn.BatchNorm2d):
                               weight: torch.Tensor,
                               bias: torch.Tensor,
                               index: Tuple[int, int]) -> None:
-        print(f'set_subset_parameters: {index}')
         """
         Sets the parameters of a subset of the model's weights and biases.
 
@@ -209,20 +207,3 @@ class SSBatchNorm2d(nn.BatchNorm2d):
             return Fraction(1, 1)
         numerator, denominator = map(int, fraction_str.split('/'))
         return Fraction(numerator, denominator)
-
-
-if __name__ == '__main__':
-    bn1 = nn.BatchNorm2d(4)
-    bn2 = SSBatchNorm2d(4, features_ranges=[('0', '2/4'), ('3/4', '1')])
-
-    new_bias_values = torch.tensor([0.1, 0.2, 0.3, 0.4])  # 每个值都不同
-    new_weight_values = torch.tensor([1.1, 1.2, 1.3, 1.4])  # 每个值都不同
-    with torch.no_grad():
-        bn1.bias = nn.Parameter(new_bias_values)
-        bn1.weight = nn.Parameter(new_weight_values)
-
-    bn2.reset_parameters_from_father_layer(bn1)
-    print(bn1.weight)
-    print(bn1.bias)
-    print(bn2.weight)
-    print(bn2.bias)

@@ -37,8 +37,8 @@ def extract(parameters: Parameters, client_net: nn.Module, server_net: nn.Module
         for layer, father_layer in zip(client_net.modules(), server_net.modules()):
             if isinstance(layer, SUPPORT_LAYER):
                 layer.reset_parameters_from_father_layer(father_layer)
-            else:
-                logger.debug(f"Can't extract {layer}, ignore it.")
+            # else:
+            #     logger.debug(f"Can't extract {layer}, ignore it.")
 
         array_list: List[np.ndarray] = [_.numpy() for _ in list(client_net.parameters())]
         parameters = ndarrays_to_parameters(array_list)
@@ -81,8 +81,8 @@ def merge(results: List[Tuple[ClientProxy, FitRes]], client_nets: List[nn.Module
             if isinstance(layer, SUPPORT_LAYER):
                 client_layers = [dict(client_net.named_modules())[layer_name] for client_net in client_nets]
                 aggregate_layer(layer, client_layers, num_examples_list)
-            else:
-                logger.debug(f"Can't merge {layer}, ignore it.")
+            # else:
+            #     logger.debug(f"Can't merge {layer}, ignore it.")
 
         array_list: List[np.ndarray] = [_.numpy() for _ in list(server_net.parameters())]
         parameters = ndarrays_to_parameters(array_list)
