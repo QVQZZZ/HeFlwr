@@ -5,11 +5,13 @@ from typing import List
 import numpy as np
 import torch
 import flwr as fl
+from flwr.common import Config
 
 from heflwr.monitor.process_monitor import FileMonitor
 
 from dataloaders import load_data
-from cifarcnn import CifarCNN as Net
+# from cifarcnn import CifarCNN as Net
+from cifarresnet import ResNet18 as Net
 from utils import DEVICE, train, test
 
 print(f"Training on {DEVICE} using PyTorch {torch.__version__} and Flower {fl.__version__}")
@@ -50,6 +52,9 @@ class FlClient(fl.client.NumPyClient):
         self.set_parameters(parameters)
         loss, accuracy = test(self.net, self.test_loader)
         return float(loss), self.num_examples["test_set"], {"accuracy": float(accuracy)}
+
+    def get_properties(self, config: Config):
+        return {"cid": self.cid}
 
 
 if __name__ == '__main__':

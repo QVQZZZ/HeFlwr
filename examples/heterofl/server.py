@@ -10,5 +10,5 @@ def weighted_average(metrics):
     return {"accuracy": sum(accuracies) / sum(examples)}
 
 
-fl.server.start_server(config=fl.server.ServerConfig(num_rounds=5),
+fl.server.start_server(config=fl.server.ServerConfig(num_rounds=3),
                        strategy=HeteroFL(evaluate_metrics_aggregation_fn=weighted_average))
