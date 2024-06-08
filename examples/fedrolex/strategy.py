@@ -5,15 +5,15 @@ import numpy as np
 import torch
 import torch.nn as nn
 import flwr as fl
-from flwr.common import Parameters, Scalar, EvaluateRes, EvaluateIns, FitRes, FitIns
+from flwr.common import Parameters, Scalar, EvaluateRes, EvaluateIns, FitRes, FitIns, GetPropertiesIns
 from flwr.server import ClientManager
 from flwr.server.client_proxy import ClientProxy
 from flwr.server.strategy import FedAvg
 
-from heflwr.fed.heflwr_aggregate import extract, merge
 from heflwr.fed import extract, merge
 
-from cifarcnn import CifarCNN as Net
+# from cifarcnn import CifarCNN as Net
+from cifarresnet import ResNet18 as Net
 
 
 map_client_14 = {0: [('0', '1/4')], 1: [('1/4', '2/4')], 2: [('2/4', '3/4')], 3: [('3/4', '1')]}
@@ -67,26 +67,32 @@ class FedRolex(FedAvg):
         fit_configurations = []
         server_net = Net(struct_44)
         for client in clients:
-            if client.cid.split(":")[1] == "192.168.3.78":
+            query = GetPropertiesIns({})
+            client_id = client.get_properties(query, timeout=30).properties['cid']
+            print(client_id)
+            if client_id == 1:
                 client_net = Net(struct_14)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_14)})
                 fit_configurations.append((client, fit_ins))
-            elif client.cid.split(":")[1] == "192.168.3.92":
+            elif client_id == 2:
                 client_net = Net(struct_24)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_24)})
                 fit_configurations.append((client, fit_ins))
-            elif client.cid.split(":")[1] == "192.168.3.93":
+            elif client_id == 3:
                 client_net = Net(struct_34)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_34)})
                 fit_configurations.append((client, fit_ins))
-            else:
+            elif client_id == 4:
                 client_net = Net(struct_44)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_44)})
                 fit_configurations.append((client, fit_ins))
+            else:
+                print(client_id)
+                raise RuntimeError('Unknown client_id.')
         return fit_configurations
 
     def aggregate_fit(self,
@@ -101,14 +107,18 @@ class FedRolex(FedAvg):
 
         client_nets = []
         for client, _ in results:
-            if client.cid.split(":")[1] == "192.168.3.78":
+            query = GetPropertiesIns({})
+            client_id = client.get_properties(query, timeout=30).properties['cid']
+            if client_id == 1:
                 client_nets.append(Net(struct_14))
-            elif client.cid.split(":")[1] == "192.168.3.92":
+            elif client_id == 2:
                 client_nets.append(Net(struct_24))
-            elif client.cid.split(":")[1] == "192.168.3.93":
+            elif client_id == 3:
                 client_nets.append(Net(struct_34))
-            else:
+            elif client_id == 4:
                 client_nets.append(Net(struct_44))
+            else:
+                raise RuntimeError('Unknown client_id.')
         parameter_aggregated = merge(results, client_nets, Net(struct_44))
         return parameter_aggregated, {}
 
@@ -133,26 +143,30 @@ class FedRolex(FedAvg):
 
         server_net = Net(('0', '1'))
         for client in clients:
-            if client.cid.split(":")[1] == "192.168.3.78":
+            query = GetPropertiesIns({})
+            client_id = client.get_properties(query, timeout=30).properties['cid']
+            if client_id == 1:
                 client_net = Net(struct_14)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = FitIns(parameters=p, config={})
                 evaluate_configurations.append((client, fit_ins))
-            elif client.cid.split(":")[1] == "192.168.3.92":
+            elif client_id == 2:
                 client_net = Net(struct_24)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = EvaluateIns(parameters=p, config={})
                 evaluate_configurations.append((client, fit_ins))
-            elif client.cid.split(":")[1] == "192.168.3.93":
+            elif client_id == 3:
                 client_net = Net(struct_34)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = EvaluateIns(parameters=p, config={})
                 evaluate_configurations.append((client, fit_ins))
-            else:
+            elif client_id == 4:
                 client_net = Net(struct_44)
                 p = extract(parameters, client_net, server_net)
                 fit_ins = EvaluateIns(parameters=p, config={})
                 evaluate_configurations.append((client, fit_ins))
+            else:
+                raise RuntimeError('Unknown client_id.')
         return evaluate_configurations
 
     def aggregate_evaluate(self,

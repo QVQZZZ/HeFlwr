@@ -9,6 +9,7 @@ git clone --depth=1 https://github.com/QVQZZZ/HeFlwr.git \
 ```
 如果您有多个安装了 HeFlwr 的设备，并希望在多个设备之间运行联邦学习。您还需要在另外的设备中运行上述命令。
 
+为了运行此案例，您需要修改 `client{N}.py` 文件中的 `server_address` 以及 `strategy.py` 中的客户端 IP。
 ## 运行
 选择一个您喜欢的设备，并运行 `python server.py` 以让它充当联邦学习服务器。
 
