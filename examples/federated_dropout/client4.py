@@ -11,7 +11,7 @@ from heflwr.monitor.process_monitor import FileMonitor
 
 from dataloaders import load_data
 from cifarcnn import CifarCNN as Net
-# from cifarresnet import ResNet18 as Net
+from cifarresnet import ResNet18 as Net
 from utils import DEVICE, train, test
 
 print(f"Training on {DEVICE} using PyTorch {torch.__version__} and Flower {fl.__version__}")
