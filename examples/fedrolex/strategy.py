@@ -69,7 +69,6 @@ class FedRolex(FedAvg):
         for client in clients:
             query = GetPropertiesIns({})
             client_id = client.get_properties(query, timeout=30).properties['cid']
-            print(client_id)
             if client_id == 1:
                 client_net = Net(struct_14)
                 p = extract(parameters, client_net, server_net)
