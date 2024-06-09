@@ -90,7 +90,6 @@ class FedRolex(FedAvg):
                 fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_44)})
                 fit_configurations.append((client, fit_ins))
             else:
-                print(client_id)
                 raise RuntimeError('Unknown client_id.')
         return fit_configurations
 
