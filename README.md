@@ -4,7 +4,6 @@
 <h1 align="center"> HeFlwr: A Federated Learning Framework for Heterogeneous Devices </h1>
 <div align="center">
 
-
 English | [简体中文](https://github.com/QVQZZZ/HeFlwr/blob/main/README.zh.md)
 </div>
 
