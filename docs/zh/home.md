@@ -1,4 +1,4 @@
-![](![](https://github.com/QVQZZZ/HeFlwr/blob/main/pictures/name_logo.svg))
+![](https://github.com/QVQZZZ/HeFlwr/blob/main/pictures/name_logo.svg)
 
 > #### 一个用于系统异构联邦学习研究和部署的工具箱
 
