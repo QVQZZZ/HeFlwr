@@ -1,15 +1,15 @@
-### 准备
+## 准备
 开始之前，请确保您的系统已安装以下软件：
 - Python 3.6 或更高版本
 - pip
 
-### 安装 HeFlwr
+## 安装 HeFlwr
 使用 pip 运行以下命令安装 HeFlwr 包：
 ``` shell
 pip install heflwr
 ```
 
-### Installing Flower and PyTorch
+## Installing Flower and PyTorch
 为了完整使用 HeFlwr 的功能，还需要安装 Flower、PyTorch 以及 Psutil。按照以下步骤安装它们：
 
 1. 使用 `pip` 安装 Flower：
@@ -31,7 +31,7 @@ pip install heflwr
    pip install psutil
    ```
 
-### 验证安装
+## 验证安装
 要验证 HeFlwr、Flower、PyTorch 和 Psutil 是否已成功安装，您可以在终端中运行以下命令：
 ``` shell
 python -c "import heflwr; print(heflwr.__version__)"
@@ -41,6 +41,6 @@ python -c "import psutil; print(psutil.__version__)"
 ```
 命令应返回 HeFlwr、Flower、PyTorch 和 Psutil 的版本号，表明它们已成功安装在您的系统上。
 
-### 下一步
+## 下一步
 成功安装 HeFlwr、Flower、PyTorch 以及 Psutil 后，您可能想要：
 - 访问 HeFlwr 的项目[主页](https://github.com/QVQZZZ/HeFlwr)，以总览 HeFlwr 的设计背景和指导理念。
