@@ -12,9 +12,6 @@ from flwr.server.strategy import FedAvg
 
 from heflwr.fed import extract, merge
 
-from cifarcnn import CifarCNN as Net
-from cifarresnet import ResNet18 as Net
-
 
 def get_parameters(net) -> List[np.ndarray]:
     return [val.cpu().numpy() for _, val in net.state_dict().items()]
@@ -27,7 +24,12 @@ def set_parameters(net, parameters: List[np.ndarray]):
 
 
 class FederatedDropout(FedAvg):
-    clients_dropout_ins = {}
+    current_client_nets = {}
+    current_client = []
+
+    def __init__(self, *args, network, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.network = network
 
     def __repr__(self) -> str:
         """ Compute a string representation of the strategy. """
@@ -38,7 +40,7 @@ class FederatedDropout(FedAvg):
         self, client_manager: ClientManager
     ) -> Optional[Parameters]:
         """ Initialize global model parameters. """
-        net: nn.Module = Net(p=1)
+        net: nn.Module = self.network(p=1)
         arrays: List[np.ndarray] = get_parameters(net)
         return fl.common.ndarrays_to_parameters(arrays)
 
@@ -54,23 +56,17 @@ class FederatedDropout(FedAvg):
         clients = client_manager.sample(
             num_clients=sample_size, min_num_clients=min_num_clients
         )
+        self.current_client = clients
 
         fit_configurations = []
-        server_net = Net(p=1)
+        server_net = self.network(p=1)
         for client in clients:
             query = GetPropertiesIns({})
-            client_id = client.get_properties(query, timeout=30).properties['cid']
-            if client_id in (1, ):
-                client_net = Net(p=0.25)
-            elif client_id in (2, ):
-                client_net = Net(p=0.5)
-            elif client_id in (3, ):
-                client_net = Net(p=0.75)
-            elif client_id in (4, ):
-                client_net = Net(p=1)
-            else:
-                raise RuntimeError('Unknown client_id.')
-            self.clients_dropout_ins[client_id] = client_net
+            rsp = client.get_properties(query, timeout=30)
+            client_id = rsp.properties['cid']
+            client_p = rsp.properties['p']
+            client_net = self.network(client_p)
+            self.current_client_nets[client_id] = client_net
             p = extract(parameters, client_net, server_net)
             fit_ins = FitIns(parameters=p, config={'dropout_ins': str(client_net.dropout_ins)})
             fit_configurations.append((client, fit_ins))
@@ -85,8 +81,8 @@ class FederatedDropout(FedAvg):
         for client, _ in results:
             query = GetPropertiesIns({})
             client_id = client.get_properties(query, timeout=30).properties['cid']
-            client_nets.append(self.clients_dropout_ins[client_id])
-        parameter_aggregated = merge(results, client_nets, Net(p=1))
+            client_nets.append(self.current_client_nets[client_id])
+        parameter_aggregated = merge(results, client_nets, self.network(p=1))
         return parameter_aggregated, {}
 
     def configure_evaluate(self,
@@ -94,19 +90,13 @@ class FederatedDropout(FedAvg):
                            parameters: Parameters,
                            client_manager: ClientManager
                            ) -> List[Tuple[ClientProxy, EvaluateIns]]:
-        # Sample clients
-        sample_size, min_num_clients = self.num_fit_clients(
-            client_manager.num_available()
-        )
-        clients = client_manager.sample(
-            num_clients=sample_size, min_num_clients=min_num_clients
-        )
+        clients = self.current_client  # 避免evaluate时self.current_client_nets对应的项为空
         evaluate_configurations = []
-        server_net = Net(p=1)
+        server_net = self.network(p=1)
         for client in clients:
             query = GetPropertiesIns({})
             client_id = client.get_properties(query, timeout=30).properties['cid']
-            client_net = self.clients_dropout_ins[client_id]
+            client_net = self.current_client_nets[client_id]
             p = extract(parameters, client_net, server_net)
             evaluate_ins = EvaluateIns(parameters=p, config={})
             evaluate_configurations.append((client, evaluate_ins))

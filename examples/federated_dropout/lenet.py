@@ -36,13 +36,13 @@ def gen_ranges(neurons, keep_rate):
     return ret
 
 
-class CifarCNN(nn.Module):
+class LeNet(nn.Module):
     def __init__(self, p=1, dropout_ins=None) -> None:
-        super(CifarCNN, self).__init__()
+        super(LeNet, self).__init__()
         if dropout_ins is not None:
             self.dropout_ins = dropout_ins
             i = 0
-            self.conv1 = SSConv2d(3, 8, 5,
+            self.conv1 = SSConv2d(1, 8, 5,
                                   in_channels_ranges=('0', '1'), out_channels_ranges=self.dropout_ins[i])
             self.pool = nn.MaxPool2d(2, 2)
             self.conv2 = SSConv2d(8, 16, 5,
@@ -57,7 +57,7 @@ class CifarCNN(nn.Module):
         else:
             self.dropout_ins = []
             self.dropout_ins.append(gen_ranges(8, p))
-            self.conv1 = SSConv2d(3, 8, 5,
+            self.conv1 = SSConv2d(1, 8, 5,
                                   in_channels_ranges=('0', '1'), out_channels_ranges=self.dropout_ins[-1])
             self.pool = nn.MaxPool2d(2, 2)
             self.dropout_ins.append(gen_ranges(16, p))
@@ -73,7 +73,7 @@ class CifarCNN(nn.Module):
                                 in_features_ranges=self.dropout_ins[-1], out_features_ranges=('0', '1'))
             self.flatten = nn.Flatten()
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = self.flatten(x)
