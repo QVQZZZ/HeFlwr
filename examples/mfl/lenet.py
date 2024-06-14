@@ -21,15 +21,15 @@ NET_STRUCTS = generate_combinations(TOP, BOTTOM, NUM_DROPOUT_COUNTS)
 NUM_TYPES = 2 ** NUM_DROPOUT_COUNTS
 
 
-class CifarCNN(nn.Module):
+class LeNet(nn.Module):
     def __init__(self, net_type) -> None:
-        super(CifarCNN, self).__init__()
+        super(LeNet, self).__init__()
         if net_type == NUM_TYPES:
             self.dropout_ins = tuple(ALL for _ in range(NUM_DROPOUT_COUNTS))
         else:
             self.dropout_ins = NET_STRUCTS[net_type]
         i = 0
-        self.conv1 = SSConv2d(3, 8, 5,
+        self.conv1 = SSConv2d(1, 8, 5,
                               in_channels_ranges=('0', '1'), out_channels_ranges=self.dropout_ins[i])
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = SSConv2d(8, 16, 5,

@@ -12,10 +12,20 @@ If you have multiple devices installed with HeFlwr and wish to run federated lea
 To run this example, you need to modify the `server_address` in the `client{N}.py` file and the client IP in `strategy.py`.
 
 ## Running
-Choose one device you like and run `python server.py` to make it act as a federated learning server.
+Choose a device you prefer and run `server.py` to let it act as the federated learning server.
 
-Then, on any device, run `python client{N}.py` to make it a federated learning client.
-You need to replace {N} with {1|2|3|4}.
+Then, on any device, run `client.py` to let it become a federated learning client.
+
+For example, you can run the following commands in multiple terminals on the same machine:
+```shell
+python server.py --dataset cifar10 --num_rounds 3
+python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 1 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32
+python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 2 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32
+python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 3 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32
+python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 4 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32
+```
+This will perform federated learning on the CIFAR-10 dataset using the ResNet-18 network, with a total of 3 communication rounds, 4 clients, and a Dirichlet distribution with alpha=0.5 for data partitioning.
+
 
 ## Results
 You can get the training process loss and acc data on the device terminal running the server.

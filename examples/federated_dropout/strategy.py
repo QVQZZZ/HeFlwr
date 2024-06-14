@@ -25,7 +25,7 @@ def set_parameters(net, parameters: List[np.ndarray]):
 
 class FederatedDropout(FedAvg):
     current_client_nets = {}
-    current_client = []
+    current_clients = []
 
     def __init__(self, *args, network, **kwargs):
         super().__init__(*args, **kwargs)
@@ -56,7 +56,7 @@ class FederatedDropout(FedAvg):
         clients = client_manager.sample(
             num_clients=sample_size, min_num_clients=min_num_clients
         )
-        self.current_client = clients
+        self.current_clients = clients
 
         fit_configurations = []
         server_net = self.network(p=1)
@@ -90,7 +90,7 @@ class FederatedDropout(FedAvg):
                            parameters: Parameters,
                            client_manager: ClientManager
                            ) -> List[Tuple[ClientProxy, EvaluateIns]]:
-        clients = self.current_client  # 避免evaluate时self.current_client_nets对应的项为空
+        clients = self.current_clients  # 避免evaluate时self.current_client_nets对应的项为空
         evaluate_configurations = []
         server_net = self.network(p=1)
         for client in clients:

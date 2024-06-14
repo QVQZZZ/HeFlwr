@@ -20,7 +20,7 @@ python server.py --dataset cifar10 --num_rounds 3
 python client.py --server_address 127.0.0.1:8080 --client_num 2 --cid 1 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32
 python client.py --server_address 127.0.0.1:8080 --client_num 2 --cid 2 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32
 ```
-This will perform federated learning on the CIFAR-10 dataset using the ResNet-18 network, with a total of 3 communication rounds, 2 clients, and a Dirichlet distribution with alpha=0.5 for data partitioning.
+This will perform federated learning on the CIFAR-10 dataset using the ResNet-18 network, with a total of 3 communication rounds, 4 clients, and a Dirichlet distribution with alpha=0.5 for data partitioning.
 
 ## Results
 You can get the training process loss and acc data on the device terminal running the server.

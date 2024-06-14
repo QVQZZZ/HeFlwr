@@ -12,9 +12,6 @@ from flwr.server.strategy import FedAvg
 
 from heflwr.fed import extract, merge
 
-from cifarcnn import CifarCNN as Net, NUM_TYPES
-from cifarresnet import ResNet18 as Net, NUM_TYPES
-
 
 def get_parameters(net) -> List[np.ndarray]:
     return [val.cpu().numpy() for _, val in net.state_dict().items()]
@@ -27,7 +24,13 @@ def set_parameters(net, parameters: List[np.ndarray]):
 
 
 class MFL(FedAvg):
-    clients_nets = {}
+    current_client_nets = {}
+    current_clients = []
+
+    def __init__(self, *args, network, num_types, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.network = network
+        self.num_types = num_types
 
     def __repr__(self) -> str:
         """ Compute a string representation of the strategy. """
@@ -38,7 +41,7 @@ class MFL(FedAvg):
         self, client_manager: ClientManager
     ) -> Optional[Parameters]:
         """ Initialize global model parameters. """
-        net: nn.Module = Net(net_type=NUM_TYPES)
+        net: nn.Module = self.network(net_type=self.num_types)
         arrays: List[np.ndarray] = get_parameters(net)
         return fl.common.ndarrays_to_parameters(arrays)
 
@@ -54,16 +57,17 @@ class MFL(FedAvg):
         clients = client_manager.sample(
             num_clients=sample_size, min_num_clients=min_num_clients
         )
+        self.current_clients = clients
 
         fit_configurations = []
-        server_net = Net(net_type=NUM_TYPES)
+        server_net = self.network(net_type=self.num_types)
         for client in clients:
             query = GetPropertiesIns({})
             client_id = client.get_properties(query, timeout=30).properties['cid']
-            client_net = Net((client_id + server_round - 1) % NUM_TYPES)
-            self.clients_nets[client_id] = client_net
+            client_net = self.network((client_id + server_round - 1) % self.num_types)
+            self.current_client_nets[client_id] = client_net
             p = extract(parameters, client_net, server_net)
-            fit_ins = FitIns(parameters=p, config={'net_type': ((client_id + server_round - 1) % NUM_TYPES)})
+            fit_ins = FitIns(parameters=p, config={'net_type': ((client_id + server_round - 1) % self.num_types)})
             fit_configurations.append((client, fit_ins))
         return fit_configurations
 
@@ -76,8 +80,8 @@ class MFL(FedAvg):
         for client, _ in results:
             query = GetPropertiesIns({})
             client_id = client.get_properties(query, timeout=30).properties['cid']
-            client_nets.append(self.clients_nets[client_id])
-        parameter_aggregated = merge(results, client_nets, Net(net_type=NUM_TYPES))
+            client_nets.append(self.current_client_nets[client_id])
+        parameter_aggregated = merge(results, client_nets, self.network(net_type=self.num_types))
         return parameter_aggregated, {}
 
     def configure_evaluate(self,
@@ -85,19 +89,13 @@ class MFL(FedAvg):
                            parameters: Parameters,
                            client_manager: ClientManager
                            ) -> List[Tuple[ClientProxy, EvaluateIns]]:
-        # Sample clients
-        sample_size, min_num_clients = self.num_fit_clients(
-            client_manager.num_available()
-        )
-        clients = client_manager.sample(
-            num_clients=sample_size, min_num_clients=min_num_clients
-        )
+        clients = self.current_clients  # 避免evaluate时self.current_client_nets对应的项为空
         evaluate_configurations = []
-        server_net = Net(net_type=NUM_TYPES)
+        server_net = self.network(net_type=self.num_types)
         for client in clients:
             query = GetPropertiesIns({})
             client_id = client.get_properties(query, timeout=30).properties['cid']
-            client_net = self.clients_nets[client_id]
+            client_net = self.current_client_nets[client_id]
             p = extract(parameters, client_net, server_net)
             evaluate_ins = EvaluateIns(parameters=p, config={})
             evaluate_configurations.append((client, evaluate_ins))

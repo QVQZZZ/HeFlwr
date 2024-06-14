@@ -24,7 +24,7 @@ python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 2 --datase
 python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 3 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32 --p 3/4
 python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 4 --dataset cifar10 --partition noniid --alpha 0.5 --batch_size 32 --p 1
 ```
-This will perform federated learning on the CIFAR-10 dataset using the ResNet-18 network, with a total of 3 communication rounds, 2 clients, and a Dirichlet distribution with alpha=0.5 for data partitioning.
+This will perform federated learning on the CIFAR-10 dataset using the ResNet-18 network, with a total of 3 communication rounds, 4 clients, and a Dirichlet distribution with alpha=0.5 for data partitioning.
 Each client will train a network with different width.
 
 ## Results
