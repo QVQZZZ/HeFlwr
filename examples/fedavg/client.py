@@ -58,7 +58,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str, help='Dataset name.')
     parser.add_argument('--partition', type=str, help='Dataset partition mode.', choices=['iid', 'noniid'])
     parser.add_argument('--alpha', type=float, help='Dirichlet alpha.', default=0)
-    parser.add_argument('--batch_size', type=int, help='Batch_size')
+    parser.add_argument('--batch_size', type=int, help='Batch_size', default=32)
     args = parser.parse_args()
 
     server_address = args.server_address
@@ -70,9 +70,9 @@ if __name__ == '__main__':
     batch_size = args.batch_size
 
     if dataset == "cifar10":
-        net = ResNet18(p='1')
+        net = ResNet18(p='1').to(DEVICE)
     elif dataset == "mnist":
-        net = LeNet(p='1')
+        net = LeNet(p='1').to(DEVICE)
 
     if partition == "iid":
         partitioner = IidPartitioner(client_num)

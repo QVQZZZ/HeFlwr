@@ -10,6 +10,8 @@ class CustomDataset(Dataset):
     """
     def __init__(self, dataset, name, split):
         self.dataset = dataset
+        self.name = name
+        self.split = split
         self.transform = self.get_transforms(name, split)
 
     @staticmethod
@@ -52,8 +54,11 @@ class CustomDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
+        data_field_dict = {"cifar10": 'img', "mnist": 'image'}
+        data_field = data_field_dict[self.name]
+
         item = self.dataset[idx]
-        img = self.transform(item['img'])
+        img = self.transform(item[data_field])
         label = item['label']
         return img, label
 

@@ -12,9 +12,6 @@ from flwr.server.strategy import FedAvg
 
 from heflwr.fed import extract, merge
 
-from lenet import LeNet as Net
-from resnet import ResNet18 as Net
-
 
 def get_parameters(net) -> List[np.ndarray]:
     return [val.cpu().numpy() for _, val in net.state_dict().items()]
@@ -40,7 +37,7 @@ class HeFlwrFedAvg(FedAvg):
         self, client_manager: ClientManager
     ) -> Optional[Parameters]:
         """ Initialize global model parameters. """
-        net: nn.Module = Net('1')
+        net: nn.Module = self.network('1')
         arrays: List[np.ndarray] = get_parameters(net)
         return fl.common.ndarrays_to_parameters(arrays)
 
@@ -58,9 +55,9 @@ class HeFlwrFedAvg(FedAvg):
         )
 
         fit_configurations = []
-        server_net = Net('1')
+        server_net = self.network('1')
         for client in clients:
-            client_net = Net('1')
+            client_net = self.network('1')
             p = extract(parameters, client_net, server_net)
             fit_ins = FitIns(parameters=p, config={})
             fit_configurations.append((client, fit_ins))
@@ -73,8 +70,8 @@ class HeFlwrFedAvg(FedAvg):
                       ) -> Tuple[Optional[Parameters], Dict[str, Scalar]]:
         client_nets = []
         for client, _ in results:
-            client_nets.append(Net('1'))
-        parameter_aggregated = merge(results, client_nets, Net('1'))
+            client_nets.append(self.network('1'))
+        parameter_aggregated = merge(results, client_nets, self.network('1'))
         return parameter_aggregated, {}
 
     def configure_evaluate(self,
@@ -90,9 +87,9 @@ class HeFlwrFedAvg(FedAvg):
             num_clients=sample_size, min_num_clients=min_num_clients
         )
         evaluate_configurations = []
-        server_net = Net('1')
+        server_net = self.network('1')
         for client in clients:
-            client_net = Net('1')
+            client_net = self.network('1')
             p = extract(parameters, client_net, server_net)
             fit_ins = EvaluateIns(parameters=p, config={})
             evaluate_configurations.append((client, fit_ins))
