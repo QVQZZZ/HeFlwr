@@ -12,9 +12,6 @@ from flwr.server.strategy import FedAvg
 
 from heflwr.fed import extract, merge
 
-# from cifarcnn import CifarCNN as Net
-from cifarresnet import ResNet18 as Net
-
 
 def get_parameters(net) -> List[np.ndarray]:
     return [val.cpu().numpy() for _, val in net.state_dict().items()]
@@ -27,6 +24,10 @@ def set_parameters(net, parameters: List[np.ndarray]):
 
 
 class HeteroFL(FedAvg):
+    def __init__(self, *args, network, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.network = network
+
     def __repr__(self) -> str:
         """ Compute a string representation of the strategy. """
         rep = f"HeteroFL(accept_failures={self.accept_failures})"
@@ -36,7 +37,7 @@ class HeteroFL(FedAvg):
         self, client_manager: ClientManager
     ) -> Optional[Parameters]:
         """ Initialize global model parameters. """
-        net: nn.Module = Net('1')
+        net: nn.Module = self.network('1')
         arrays: List[np.ndarray] = get_parameters(net)
         return fl.common.ndarrays_to_parameters(arrays)
 
@@ -54,32 +55,15 @@ class HeteroFL(FedAvg):
         )
 
         fit_configurations = []
-        server_net = Net('1')
+        server_net = self.network('1')
         for client in clients:
             query = GetPropertiesIns({})
-            client_id = client.get_properties(query, timeout=30).properties['cid']
-            if client_id == 1:
-                client_net = Net('1/4')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={})
-                fit_configurations.append((client, fit_ins))
-            elif client_id == 2:
-                client_net = Net('2/4')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={})
-                fit_configurations.append((client, fit_ins))
-            elif client_id == 3:
-                client_net = Net('3/4')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={})
-                fit_configurations.append((client, fit_ins))
-            elif client_id == 4:
-                client_net = Net('1')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={})
-                fit_configurations.append((client, fit_ins))
-            else:
-                raise RuntimeError('Unknown client_id.')
+            rsp = client.get_properties(query, timeout=30)
+            client_p = rsp.properties['p']
+            client_net = self.network(client_p)
+            p = extract(parameters, client_net, server_net)
+            fit_ins = FitIns(parameters=p, config={})
+            fit_configurations.append((client, fit_ins))
         return fit_configurations
 
     def aggregate_fit(self,
@@ -90,18 +74,10 @@ class HeteroFL(FedAvg):
         client_nets = []
         for client, _ in results:
             query = GetPropertiesIns({})
-            client_id = client.get_properties(query, timeout=30).properties['cid']
-            if client_id == 1:
-                client_nets.append(Net('1/4'))
-            elif client_id == 2:
-                client_nets.append(Net('2/4'))
-            elif client_id == 3:
-                client_nets.append(Net('3/4'))
-            elif client_id == 4:
-                client_nets.append(Net('1'))
-            else:
-                raise RuntimeError('Unknown client_id.')
-        parameter_aggregated = merge(results, client_nets, Net('1'))
+            rsp = client.get_properties(query, timeout=30)
+            client_p = rsp.properties['p']
+            client_nets.append(self.network(client_p))
+        parameter_aggregated = merge(results, client_nets, self.network('1'))
         return parameter_aggregated, {}
 
     def configure_evaluate(self,
@@ -117,32 +93,15 @@ class HeteroFL(FedAvg):
             num_clients=sample_size, min_num_clients=min_num_clients
         )
         evaluate_configurations = []
-        server_net = Net('1')
+        server_net = self.network('1')
         for client in clients:
             query = GetPropertiesIns({})
-            client_id = client.get_properties(query, timeout=30).properties['cid']
-            if client_id == 1:
-                client_net = Net('1/4')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            elif client_id == 2:
-                client_net = Net('2/4')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = EvaluateIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            elif client_id == 3:
-                client_net = Net('3/4')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = EvaluateIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            elif client_id == 4:
-                client_net = Net('1')
-                p = extract(parameters, client_net, server_net)
-                fit_ins = EvaluateIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            else:
-                raise RuntimeError('Unknown client_id.')
+            rsp = client.get_properties(query, timeout=30)
+            client_p = rsp.properties['p']
+            client_net = self.network(client_p)
+            p = extract(parameters, client_net, server_net)
+            evaluate_ins = EvaluateIns(parameters=p, config={})
+            evaluate_configurations.append((client, evaluate_ins))
         return evaluate_configurations
 
     def aggregate_evaluate(self,

@@ -14,7 +14,7 @@ def train(net, trainloader, epochs: int, verbose=False):
         for images, labels in trainloader:
             images, labels = images.to(DEVICE), labels.to(DEVICE)
             optimizer.zero_grad()
-            outputs = net(images)
+            outputs = net(images).to(DEVICE)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -36,7 +36,7 @@ def test(net, testloader):
     with torch.no_grad():
         for images, labels in testloader:
             images, labels = images.to(DEVICE), labels.to(DEVICE)
-            outputs = net(images)
+            outputs = net(images).to(DEVICE)
             loss += criterion(outputs, labels).item()
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)

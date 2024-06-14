@@ -5,6 +5,7 @@ from typing import List
 import numpy as np
 import torch
 import flwr as fl
+from flwr.common import Config
 from flwr_datasets.partitioner import IidPartitioner, DirichletPartitioner
 
 from heflwr.monitor.process_monitor import FileMonitor
@@ -24,12 +25,13 @@ def set_parameters(net, parameters: List[np.ndarray]):
 
 # In[federated learning client]
 class FlClient(fl.client.NumPyClient):
-    def __init__(self, cid, net, train_loader, test_loader, num_examples):
+    def __init__(self, cid, net, train_loader, test_loader, num_examples, p):
         self.cid = cid
         self.net = net
         self.train_loader = train_loader
         self.test_loader = test_loader
         self.num_examples = num_examples
+        self.p = p
 
     def get_parameters(self, config):
         return [val.cpu().numpy() for _, val in self.net.state_dict().items()]
@@ -49,6 +51,9 @@ class FlClient(fl.client.NumPyClient):
         loss, accuracy = test(self.net, self.test_loader)
         return float(loss), self.num_examples["test_set"], {"accuracy": float(accuracy)}
 
+    def get_properties(self, config: Config):
+        return {"cid": self.cid, "p": self.p}
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Heflwr baseline client.")
@@ -59,6 +64,7 @@ if __name__ == '__main__':
     parser.add_argument('--partition', type=str, help='Dataset partition mode.', choices=['iid', 'noniid'])
     parser.add_argument('--alpha', type=float, help='Dirichlet alpha.', default=0)
     parser.add_argument('--batch_size', type=int, help='Batch size.', default=32)
+    parser.add_argument('--p', type=str, help='HeteroFL p, such as 1/4.')
     args = parser.parse_args()
 
     server_address = args.server_address
@@ -68,11 +74,12 @@ if __name__ == '__main__':
     partition = args.partition
     alpha = args.alpha
     batch_size = args.batch_size
+    p = args.p
 
     if dataset == "cifar10":
-        net = ResNet18(p='1').to(DEVICE)
+        net = ResNet18(p=p).to(DEVICE)
     elif dataset == "mnist":
-        net = LeNet(p='1').to(DEVICE)
+        net = LeNet(p=p).to(DEVICE)
 
     if partition == "iid":
         partitioner = IidPartitioner(client_num)
@@ -80,9 +87,9 @@ if __name__ == '__main__':
         partitioner = DirichletPartitioner(num_partitions=client_num, partition_by="label",
                                            alpha=alpha, min_partition_size=100, self_balancing=True)
     train_loader, test_loader, num_examples = load_partition_data(dataset, partitioner, cid, batch_size)
-    client = FlClient(cid, net, train_loader, test_loader, num_examples)
+    client = FlClient(cid, net, train_loader, test_loader, num_examples, p)
 
-    monitor = FileMonitor(file='./fedavg_test_log.txt')
+    monitor = FileMonitor(file='./heterofl_test_log.txt')
     monitor.start()
     print(f"Training on {DEVICE} using PyTorch {torch.__version__} and Flower {fl.__version__}")
     fl.client.start_numpy_client(server_address=server_address, client=client)
