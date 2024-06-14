@@ -12,7 +12,8 @@ from flwr.server.strategy import FedAvg
 
 from heflwr.fed import extract, merge
 
-from cifarcnn import CifarCNN as Net
+from lenet import LeNet as Net
+from resnet import ResNet18 as Net
 
 
 def get_parameters(net) -> List[np.ndarray]:
@@ -26,6 +27,10 @@ def set_parameters(net, parameters: List[np.ndarray]):
 
 
 class HeFlwrFedAvg(FedAvg):
+    def __init__(self, *args, network, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.network = network
+
     def __repr__(self) -> str:
         """ Compute a string representation of the strategy. """
         rep = f"HeFlwrFedAvg(accept_failures={self.accept_failures})"

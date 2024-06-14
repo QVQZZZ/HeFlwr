@@ -1,20 +1,18 @@
-# In[import and global vars]
+import argparse
 from collections import OrderedDict
 from typing import List
 
 import numpy as np
 import torch
 import flwr as fl
+from flwr_datasets.partitioner import IidPartitioner, DirichletPartitioner
 
 from heflwr.monitor.process_monitor import FileMonitor
 
-from dataloaders import load_data
-from cifarcnn import CifarCNN as Net
+from dataloaders import load_partition_data
+from lenet import LeNet
+from resnet import ResNet18
 from utils import DEVICE, train, test
-
-print(f"Training on {DEVICE} using PyTorch {torch.__version__} and Flower {fl.__version__}")
-NUM_CLIENTS = 10
-BATCH_SIZE = 32
 
 
 def set_parameters(net, parameters: List[np.ndarray]):
@@ -53,10 +51,39 @@ class FlClient(fl.client.NumPyClient):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Heflwr baseline client.")
+    parser.add_argument('--server_address', type=str, help='The address of fl server.', default='127.0.0.1:8080')
+    parser.add_argument('--client_num', type=int, help='The numbers of clients in fl.')
+    parser.add_argument('--cid', type=int, help='The id of the client.(Starting from 1)')
+    parser.add_argument('--dataset', type=str, help='Dataset name.')
+    parser.add_argument('--partition', type=str, help='Dataset partition mode.', choices=['iid', 'noniid'])
+    parser.add_argument('--alpha', type=float, help='Dirichlet alpha.', default=0)
+    parser.add_argument('--batch_size', type=int, help='Batch_size')
+    args = parser.parse_args()
+
+    server_address = args.server_address
+    client_num = args.client_num
+    cid = args.cid
+    dataset = args.dataset
+    partition = args.partition
+    alpha = args.alpha
+    batch_size = args.batch_size
+
+    if dataset == "cifar10":
+        net = ResNet18(p='1')
+    elif dataset == "mnist":
+        net = LeNet(p='1')
+
+    if partition == "iid":
+        partitioner = IidPartitioner(client_num)
+    elif partition == "noniid":
+        partitioner = DirichletPartitioner(num_partitions=client_num, partition_by="label",
+                                           alpha=alpha, min_partition_size=100, self_balancing=True)
+    train_loader, test_loader, num_examples = load_partition_data(dataset, partitioner, cid, batch_size)
+    client = FlClient(cid, net, train_loader, test_loader, num_examples)
+
     monitor = FileMonitor(file='./fedavg_test_log.txt')
     monitor.start()
-    net = Net(p='1').to(DEVICE)
-    train_loader, test_loader, num_examples = load_data()
-    client = FlClient(1, net, train_loader, test_loader, num_examples)
-    fl.client.start_numpy_client(server_address="127.0.0.1:8080", client=client)
+    print(f"Training on {DEVICE} using PyTorch {torch.__version__} and Flower {fl.__version__}")
+    fl.client.start_numpy_client(server_address=server_address, client=client)
     monitor.stop()

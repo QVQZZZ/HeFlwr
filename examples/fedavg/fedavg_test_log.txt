@@ -1,0 +1,19 @@
+2024-06-14 23:30:49
+CPU Usage: 0.0%, Memory Usage: 1.657089420365253%, Bytes Sent: 19502, Bytes Recv: 53836, 
+CPU Usage: 0.9%, Memory Usage: 1.664116859441093%, Bytes Sent: 21859, Bytes Recv: 64543, 
+2024-06-14 23:30:55
+CPU Usage: 0.0%, Memory Usage: 1.6567760182795384%, Bytes Sent: 17864, Bytes Recv: 56373, 
+CPU Usage: 2.2%, Memory Usage: 1.6651173353301063%, Bytes Sent: 25878, Bytes Recv: 80295, 
+CPU Usage: 1.4%, Memory Usage: 1.6582465972971239%, Bytes Sent: 31017, Bytes Recv: 93134, 
+2024-06-14 23:31:05
+CPU Usage: 0.0%, Memory Usage: 1.6572943371136053%, Bytes Sent: 45914, Bytes Recv: 226077, 
+CPU Usage: 1.6%, Memory Usage: 1.6631043296257062%, Bytes Sent: 43021, Bytes Recv: 220561, 
+2024-06-14 23:37:11
+CPU Usage: 0.0%, Memory Usage: 1.3785352357964968%, Bytes Sent: 1131, Bytes Recv: 1297, 
+CPU Usage: 0.0%, Memory Usage: 1.3787642603975965%, Bytes Sent: 1558, Bytes Recv: 539, 
+CPU Usage: 0.0%, Memory Usage: 1.3787642603975965%, Bytes Sent: 3923, Bytes Recv: 4397, 
+CPU Usage: 0.0%, Memory Usage: 1.3786437211338598%, Bytes Sent: 1727, Bytes Recv: 2493, 
+CPU Usage: 0.0%, Memory Usage: 1.3786437211338598%, Bytes Sent: 8756, Bytes Recv: 11754, 
+CPU Usage: 0.0%, Memory Usage: 1.3786437211338598%, Bytes Sent: 12181, Bytes Recv: 41669, 
+CPU Usage: 0.0%, Memory Usage: 1.3786437211338598%, Bytes Sent: 13196, Bytes Recv: 48541, 
+CPU Usage: 1.9%, 

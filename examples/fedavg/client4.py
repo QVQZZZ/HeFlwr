@@ -5,11 +5,13 @@ from typing import List
 import numpy as np
 import torch
 import flwr as fl
+from flwr_datasets.partitioner import IidPartitioner, DirichletPartitioner
 
 from heflwr.monitor.process_monitor import FileMonitor
 
-from dataloaders import load_data
-from cifarcnn import CifarCNN as Net
+from dataloaders import load_partition_data
+from lenet import LeNet as Net
+from resnet import ResNet18 as Net
 from utils import DEVICE, train, test
 
 print(f"Training on {DEVICE} using PyTorch {torch.__version__} and Flower {fl.__version__}")
@@ -56,7 +58,8 @@ if __name__ == '__main__':
     monitor = FileMonitor(file='./fedavg_test_log.txt')
     monitor.start()
     net = Net(p='1').to(DEVICE)
-    train_loader, test_loader, num_examples = load_data()
+    # train_loader, test_loader, num_examples = load_data()
+    train_loader, test_loader, num_examples = load_partition_data("cifar10", IidPartitioner(10), 4)
     client = FlClient(4, net, train_loader, test_loader, num_examples)
     fl.client.start_numpy_client(server_address="127.0.0.1:8080", client=client)
     monitor.stop()

@@ -1,5 +1,8 @@
+import argparse
 import flwr as fl
 
+from lenet import LeNet
+from resnet import ResNet18
 from strategy import HeFlwrFedAvg
 
 
@@ -10,5 +13,18 @@ def weighted_average(metrics):
     return {"accuracy": sum(accuracies) / sum(examples)}
 
 
-fl.server.start_server(config=fl.server.ServerConfig(num_rounds=5),
-                       strategy=HeFlwrFedAvg(evaluate_metrics_aggregation_fn=weighted_average))
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Heflwr baseline server.")
+    parser.add_argument('--dataset', type=str, help='Dataset name.')
+    parser.add_argument('--num_rounds', type=int, help='Total rounds of fl.')
+    args = parser.parse_args()
+    dataset = args.dataset
+    num_rounds = args.num_rounds
+
+    if dataset == "cifar10":
+        network = ResNet18
+    elif dataset == "mnist":
+        network = LeNet
+
+    fl.server.start_server(config=fl.server.ServerConfig(num_rounds=num_rounds),
+                           strategy=HeFlwrFedAvg(evaluate_metrics_aggregation_fn=weighted_average, network=network))
