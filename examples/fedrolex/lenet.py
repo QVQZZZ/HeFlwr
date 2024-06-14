@@ -6,10 +6,10 @@ from heflwr.nn import SSLinear, SSConv2d
 from heflwr.nn import Layer_Range
 
 
-class CifarCNN(nn.Module):
+class LeNet(nn.Module):
     def __init__(self, net_struct: Layer_Range) -> None:
-        super(CifarCNN, self).__init__()
-        self.conv1 = SSConv2d(3, 8, 5,
+        super(LeNet, self).__init__()
+        self.conv1 = SSConv2d(1, 8, 5,
                               in_channels_ranges=('0', '1'), out_channels_ranges=net_struct)
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = SSConv2d(8, 16, 5,
@@ -22,7 +22,7 @@ class CifarCNN(nn.Module):
                             in_features_ranges=net_struct, out_features_ranges=('0', '1'))
         self.flatten = nn.Flatten()
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = self.flatten(x)

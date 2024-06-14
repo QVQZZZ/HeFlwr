@@ -12,15 +12,19 @@ from flwr.server.strategy import FedAvg
 
 from heflwr.fed import extract, merge
 
-# from cifarcnn import CifarCNN as Net
-from cifarresnet import ResNet18 as Net
 
+rolling_struct_client_14 = {0: [('0', '1/4')], 1: [('1/4', '2/4')], 2: [('2/4', '3/4')], 3: [('3/4', '1')]}
+rolling_struct_client_24 = {0: [('0', '2/4')], 1: [('1/4', '3/4')], 2: [('2/4', '4/4')], 3: [('0', '1/4'), ('3/4', '1')]}
+rolling_struct_client_34 = {0: [('0', '3/4')], 1: [('1/4', '4/4')], 2: [('0', '1/4'), ('2/4', '1')], 3: [('0', '2/4'), ('3/4', '1')]}
+rolling_struct_client_44 = {0: [('0', '1')], 1: [('0', '1')], 2: [('0', '1')], 3: [('0', '1')]}
 
-map_client_14 = {0: [('0', '1/4')], 1: [('1/4', '2/4')], 2: [('2/4', '3/4')], 3: [('3/4', '1')]}
-map_client_24 = {0: [('0', '2/4')], 1: [('1/4', '3/4')], 2: [('2/4', '4/4')], 3: [('0', '1/4'), ('3/4', '1')]}
-map_client_34 = {0: [('0', '3/4')], 1: [('1/4', '4/4')], 2: [('0', '1/4'), ('2/4', '1')], 3: [('0', '2/4'), ('3/4', '1')]}
-map_client_44 = {0: [('0', '1')], 1: [('0', '1')], 2: [('0', '1')], 3: [('0', '1')]}
-
+def round2config(server_round):
+    struct_14 = rolling_struct_client_14[server_round % 4]
+    struct_24 = rolling_struct_client_24[server_round % 4]
+    struct_34 = rolling_struct_client_34[server_round % 4]
+    struct_44 = rolling_struct_client_44[server_round % 4]
+    p2struct = {0.25: struct_14, 0.5: struct_24, 0.75: struct_34, 1: struct_44}
+    return p2struct
 
 def get_parameters(net) -> List[np.ndarray]:
     return [val.cpu().numpy() for _, val in net.state_dict().items()]
@@ -33,6 +37,10 @@ def set_parameters(net, parameters: List[np.ndarray]):
 
 
 class FedRolex(FedAvg):
+    def __init__(self, *args, network, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.network = network
+
     def __repr__(self) -> str:
         """ Compute a string representation of the strategy. """
         rep = f"FedRolex(accept_failures={self.accept_failures})"
@@ -42,7 +50,7 @@ class FedRolex(FedAvg):
         self, client_manager: ClientManager
     ) -> Optional[Parameters]:
         """ Initialize global model parameters. """
-        net: nn.Module = Net(net_struct=('0', '1'))
+        net: nn.Module = self.network(net_struct=('0', '1'))
         arrays: List[np.ndarray] = get_parameters(net)
         return fl.common.ndarrays_to_parameters(arrays)
 
@@ -59,38 +67,18 @@ class FedRolex(FedAvg):
             num_clients=sample_size, min_num_clients=min_num_clients
         )
 
-        struct_14 = map_client_14[server_round % 4]
-        struct_24 = map_client_24[server_round % 4]
-        struct_34 = map_client_34[server_round % 4]
-        struct_44 = map_client_44[server_round % 4]
-
+        p2struct = round2config(server_round)
         fit_configurations = []
-        server_net = Net(struct_44)
+        server_net = self.network(('0', '1'))
         for client in clients:
             query = GetPropertiesIns({})
-            client_id = client.get_properties(query, timeout=30).properties['cid']
-            if client_id == 1:
-                client_net = Net(struct_14)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_14)})
-                fit_configurations.append((client, fit_ins))
-            elif client_id == 2:
-                client_net = Net(struct_24)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_24)})
-                fit_configurations.append((client, fit_ins))
-            elif client_id == 3:
-                client_net = Net(struct_34)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_34)})
-                fit_configurations.append((client, fit_ins))
-            elif client_id == 4:
-                client_net = Net(struct_44)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={'net_struct': str(struct_44)})
-                fit_configurations.append((client, fit_ins))
-            else:
-                raise RuntimeError('Unknown client_id.')
+            rsp = client.get_properties(query, timeout=30)
+            client_p = rsp.properties['p']
+            net_struct = p2struct[eval(client_p)]
+            client_net = self.network(net_struct)
+            p = extract(parameters, client_net, server_net)
+            fit_ins = FitIns(parameters=p, config={'net_struct': str(net_struct)})
+            fit_configurations.append((client, fit_ins))
         return fit_configurations
 
     def aggregate_fit(self,
@@ -98,26 +86,15 @@ class FedRolex(FedAvg):
                       results: List[Tuple[ClientProxy, FitRes]],
                       failures: List[Union[Tuple[ClientProxy, FitRes], BaseException]]
                       ) -> Tuple[Optional[Parameters], Dict[str, Scalar]]:
-        struct_14 = map_client_14[server_round % 4]
-        struct_24 = map_client_24[server_round % 4]
-        struct_34 = map_client_34[server_round % 4]
-        struct_44 = map_client_44[server_round % 4]
-
+        p2struct = round2config(server_round)
         client_nets = []
         for client, _ in results:
             query = GetPropertiesIns({})
-            client_id = client.get_properties(query, timeout=30).properties['cid']
-            if client_id == 1:
-                client_nets.append(Net(struct_14))
-            elif client_id == 2:
-                client_nets.append(Net(struct_24))
-            elif client_id == 3:
-                client_nets.append(Net(struct_34))
-            elif client_id == 4:
-                client_nets.append(Net(struct_44))
-            else:
-                raise RuntimeError('Unknown client_id.')
-        parameter_aggregated = merge(results, client_nets, Net(struct_44))
+            rsp = client.get_properties(query, timeout=30)
+            client_p = rsp.properties['p']
+            net_struct = p2struct[eval(client_p)]
+            client_nets.append(self.network(net_struct))
+        parameter_aggregated = merge(results, client_nets, self.network(('0', '1')))
         return parameter_aggregated, {}
 
     def configure_evaluate(self,
@@ -132,39 +109,19 @@ class FedRolex(FedAvg):
         clients = client_manager.sample(
             num_clients=sample_size, min_num_clients=min_num_clients
         )
+
+        p2struct = round2config(server_round)
         evaluate_configurations = []
-        struct_14 = map_client_14[server_round % 4]
-        struct_24 = map_client_24[server_round % 4]
-        struct_34 = map_client_34[server_round % 4]
-        struct_44 = map_client_44[server_round % 4]
-
-
-        server_net = Net(('0', '1'))
+        server_net = self.network(('0', '1'))
         for client in clients:
             query = GetPropertiesIns({})
-            client_id = client.get_properties(query, timeout=30).properties['cid']
-            if client_id == 1:
-                client_net = Net(struct_14)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = FitIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            elif client_id == 2:
-                client_net = Net(struct_24)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = EvaluateIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            elif client_id == 3:
-                client_net = Net(struct_34)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = EvaluateIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            elif client_id == 4:
-                client_net = Net(struct_44)
-                p = extract(parameters, client_net, server_net)
-                fit_ins = EvaluateIns(parameters=p, config={})
-                evaluate_configurations.append((client, fit_ins))
-            else:
-                raise RuntimeError('Unknown client_id.')
+            rsp = client.get_properties(query, timeout=30)
+            client_p = rsp.properties['p']
+            net_struct = p2struct[eval(client_p)]
+            client_net = self.network(net_struct)
+            p = extract(parameters, client_net, server_net)
+            evaluate_ins = EvaluateIns(parameters=p, config={})
+            evaluate_configurations.append((client, evaluate_ins))
         return evaluate_configurations
 
     def aggregate_evaluate(self,
