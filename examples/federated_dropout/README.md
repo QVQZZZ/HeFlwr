@@ -1,4 +1,4 @@
-# HeteroFL
+# Federated Dropout
 ## Setup
 To run this example, you need to download this directory to your system. You can do so by running the following command in the shell or git bash:
 ``` shell

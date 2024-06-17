@@ -42,6 +42,10 @@ pip install psutil
 ## 基线🎉
 对于 <a href="#fedavg">FedAvg</a>，请查看：[FedAvg Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedavg/README.zh.md)
 
+对于 <a href="#federated_dropout">Federated Dropout</a>，请查看[Federated Dropout Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/federated_dropout/README.zh.md)
+
+对于 <a href="mfl">MFL</a>，请查看[MFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/mfl/README.zh.md)
+
 对于 <a href="#heterofl">HeteroFL</a>，请查看：[HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.zh.md)
 
 对于 <a href="#fedrolex">FedRolex</a>，请查看：[FedRolex Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedrolex/README.zh.md)
@@ -50,8 +54,14 @@ pip install psutil
 
 
 ## 参考文献📕
-<strong><p id="heterofl">[1] Enmao Diao, Jie Ding, and Vahid Tarokh. 2020. HeteroFL: Computation and communication efficient federated learning for heterogeneous clients. In _International Conference on Learning Representations (ICLR)_, Vol. 1. ICLR, online, 1.</p></strong>
+<strong><p id="fedavg">[1] Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, and Blaise Aguera y Arcas. 2017. Communicationefficient learning of deep networks from decentralized data. In _20th International Conference on Artificial Intelligence and Statistics_. PMLR, Ft. Lauderdale, FL, USA, 1273–1282.</p></strong>
 
-<strong><p id="fedrolex">[2] Samiul Alam, Luyang Liu, Ming Yan, and Mi Zhang. 2022. FedRolex: Model-Heterogeneous Federated Learning with Rolling Sub-Model Extraction. In _Advances in Neural Information Processing Systems_, Vol. 35. Curran Associates, Inc., New Orleans, United States, 158–171.</p></strong>
+<strong><p id="federated_dropout">[2] Sebastian Caldas, Jakub Konečny, H Brendan McMahan, and Ameet Talwalkar. 2018. _Expanding the reach of federated learning by reducing client resource requirements_. online. arXiv:1812.07210 [cs.LG]</p></strong>
 
-<strong><p id="fjord">[3] Samuel Horvath, Stefanos Laskaridis, Mario Almeida, Ilias Leontiadis, Stylianos Venieris, and Nicholas Lane. 2021. Fjord: Fair and accurate federated learning under heterogeneous targets with ordered dropout. In _Advances in Neural Information Processing Systems_, Vol. 34. NeurIPS, online, 1–12.</p></strong>
+<strong><p id="mfl">[3] R. Yu and P. Li. 2021. Toward Resource-Efficient Federated Learning in Mobile Edge Computing. _IEEE Network_ 35, 1 (2021), 148–155. https://doi.org/10.1109/MNET.011.2000295</p></strong>
+
+<strong><p id="heterofl">[4] Enmao Diao, Jie Ding, and Vahid Tarokh. 2020. HeteroFL: Computation and communication efficient federated learning for heterogeneous clients. In _International Conference on Learning Representations (ICLR)_, Vol. 1. ICLR, online, 1.</p></strong>
+
+<strong><p id="fedrolex">[5] Samiul Alam, Luyang Liu, Ming Yan, and Mi Zhang. 2022. FedRolex: Model-Heterogeneous Federated Learning with Rolling Sub-Model Extraction. In _Advances in Neural Information Processing Systems_, Vol. 35. Curran Associates, Inc., New Orleans, United States, 158–171.</p></strong>
+
+<strong><p id="fjord">[6] Samuel Horvath, Stefanos Laskaridis, Mario Almeida, Ilias Leontiadis, Stylianos Venieris, and Nicholas Lane. 2021. Fjord: Fair and accurate federated learning under heterogeneous targets with ordered dropout. In _Advances in Neural Information Processing Systems_, Vol. 34. NeurIPS, online, 1–12.</p></strong>

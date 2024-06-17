@@ -26,5 +26,6 @@ if __name__ == '__main__':
     elif dataset == "mnist":
         network = LeNet
 
-    fl.server.start_server(config=fl.server.ServerConfig(num_rounds=num_rounds),
-                           strategy=FedRolex(evaluate_metrics_aggregation_fn=weighted_average, network=network))
+    history = fl.server.start_server(config=fl.server.ServerConfig(num_rounds=num_rounds),
+                                     strategy=FedRolex(evaluate_metrics_aggregation_fn=weighted_average, network=network))
+    print(history)

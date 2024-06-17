@@ -27,5 +27,7 @@ if __name__ == '__main__':
     elif dataset == "mnist":
         network = LeNet
         NUM_TYPES = NUM_TYPES_LENET
-    fl.server.start_server(config=fl.server.ServerConfig(num_rounds=num_rounds),
-                           strategy=MFL(evaluate_metrics_aggregation_fn=weighted_average, network=network, num_types=NUM_TYPES))
+
+    history = fl.server.start_server(config=fl.server.ServerConfig(num_rounds=num_rounds),
+                                     strategy=MFL(evaluate_metrics_aggregation_fn=weighted_average, network=network, num_types=NUM_TYPES))
+    print(history)
