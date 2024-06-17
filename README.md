@@ -47,17 +47,33 @@ pip install psutil
 ```
 
 ## Baselines🎉
-For <a href="#fedavg">FedAvg</a>, see: [FedAvg Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedavg/README.md)
+HeFlwr provides some baseline cases in heterogeneous federated learning (we will add more baselines in the future), using unified parameters and experimental settings to offer a comparison for these baselines:
 
-For <a href="#federated_dropout">Federated Dropout</a>，see [Federated Dropout Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/federated_dropout/README.md)
 
-For <a href="mfl">MFL</a>，see [MFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/mfl/README.md)
+| Baseline-Accuracy                    | Mnist-IID   | Mnist-NonIID   | Cifar10-IID   | Cifar10-NonIID    |
+|--------------------------------------|-------------|----------------|---------------|-------------------|
+| FedAvg<br/>(Theoretical Upper Bound) | 99.30%      | 98.88%         | 86.14%        | 82.62%            |
+| Federated Dropout                    | 26.32%      | 11.35%         | 16.14%        | 14.05%            |
+| HeteroFL                             | **98.44%**  | 91.04%         | 80.71%        | 61.66%            |
+| MFL                                  | 98.41%      | **92.43%**     | 80.70%        | 66.81%            |
+| FedRolex                             | 97.55%      | 91.17%         | **82.18%**    | **67.67%**        |
 
-For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.md)
+For the specific settings of the above experiments, including neural network architecture, training hyperparameters (e.g., learning rate, optimizer), federated learning hyperparameters (e.g., communication rounds, number of clients), data partitioning hyperparameters (e.g., Dirichlet distribution alpha), and baseline-specific hyperparameters, please refer to the detailed implementation.
 
-For <a href="#fedrolex">FedRolex</a>, see: [FedRolex Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedrolex/README.md)
+The performance of each baseline may vary depending on the scenario and hyperparameter settings. You can quickly modify these parameters and conduct experiments using the command-line scripts we provide:
 
-For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fjord/README.md)
+
+- For <a href="#fedavg">FedAvg</a>, see: [FedAvg Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedavg/README.md)
+
+- For <a href="#federated_dropout">Federated Dropout</a>，see [Federated Dropout Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/federated_dropout/README.md)
+
+- For <a href="mfl">MFL</a>，see [MFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/mfl/README.md)
+
+- For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.md)
+
+- For <a href="#fedrolex">FedRolex</a>, see: [FedRolex Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fedrolex/README.md)
+
+- For <a href="#fjord">Fjord</a>, see: [Fjord Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/fjord/README.md)
 
 
 
