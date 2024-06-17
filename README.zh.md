@@ -59,7 +59,7 @@ HeFlwr 提供了异构联邦学习中的一些基线案例（未来我们将增�
 
 - 对于 <a href="#federated_dropout">Federated Dropout</a>，请查看[Federated Dropout Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/federated_dropout/README.zh.md)
 
-- 对于 <a href="mfl">MFL</a>，请查看[MFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/mfl/README.zh.md)
+- 对于 <a href="#mfl">MFL</a>，请查看[MFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/mfl/README.zh.md)
 
 - 对于 <a href="#heterofl">HeteroFL</a>，请查看：[HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.zh.md)
 

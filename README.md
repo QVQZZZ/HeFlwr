@@ -67,7 +67,7 @@ The performance of each baseline may vary depending on the scenario and hyperpar
 
 - For <a href="#federated_dropout">Federated Dropout</a>，see [Federated Dropout Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/federated_dropout/README.md)
 
-- For <a href="mfl">MFL</a>，see [MFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/mfl/README.md)
+- For <a href="#mfl">MFL</a>，see [MFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/mfl/README.md)
 
 - For <a href="#heterofl">HeteroFL</a>, see: [HeteroFL Implementation](https://github.com/QVQZZZ/HeFlwr/blob/main/examples/heterofl/README.md)
 
