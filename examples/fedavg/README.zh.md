@@ -24,6 +24,12 @@ python client.py --server_address 127.0.0.1:8080 --client_num 4 --cid 4 --datase
 ```
 这将会使用 ResNet-18 网络对 CIFAR-10 数据集进行联邦学习，总通信轮次为 3，客户端数量为 4，采用 alpha=0.5 的迪利克雷分布对数据集进行分区。
 
+或者，您可以采用我们提供的单机运行脚本来快速复现 [HeFlwr 主页](https://github.com/QVQZZZ/HeFlwr/blob/main/README.zh.md) 中的实验：
+```shell
+./fedavg.sh --num_rounds 50 --client_num 8 --dataset mnist --partition noniid --alpha 0.5 --batch_size 64  # Unix shell
+.\fedavg.ps1 -num_rounds 50 -client_num 8 -dataset mnist -partition noniid -alpha 0.5 -batch_size 64  # Windows powershell
+```
+
 ## 查看结果
 在运行服务器的设备终端上可以获取到训练过程中的 loss 和 acc 数据。
 
