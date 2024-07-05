@@ -118,14 +118,14 @@ def aggregate_layer(global_layer: SUPPORT_LAYER,
         aggregate_bias(global_bias, bias, row_index, client_weight, total_weights_bias)
 
 
-def distribute(client_net, server_net):
+def _distribute(client_net, server_net):
     with torch.no_grad():
         for layer, father_layer in zip(client_net.modules(), server_net.modules()):
             if isinstance(layer, SUPPORT_LAYER):
                 layer.reset_parameters_from_father_layer(father_layer)
 
 
-def aggregate(weights, client_nets, server_net):
+def _aggregate(weights, client_nets, server_net):
     with torch.no_grad():
         for layer_name, layer in dict(server_net.named_modules()).items():
             if isinstance(layer, SUPPORT_LAYER):
