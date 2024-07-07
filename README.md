@@ -12,9 +12,9 @@ It provides a simple interface for researching system heterogeneity in federated
 HeFlwr can customize models based on differences in client's computing capabilities and storage capacities,
 and monitor their resource usage during training.
 
-The documentation for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/en/home.md).
-
-The Wiki for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/wiki).
+> ### The documentation for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/en/home.md).
+> 
+> ### The Wiki for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/wiki).
 
 
 ## Introduction📜
