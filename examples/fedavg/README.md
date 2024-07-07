@@ -32,4 +32,4 @@ Alternatively, you can use the standalone run scripts we provide to quickly repr
 ## Results
 You can get the training process loss and acc data on the device terminal running the server.
 
-A `heterofl_test_log.txt` file will be generated in the running directory of each device, which records the device load information during the training process.
+A `fedavg_test_log.txt` file will be generated in the running directory of each device, which records the device load information during the training process.
