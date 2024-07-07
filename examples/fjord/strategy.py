@@ -11,7 +11,7 @@ from flwr.server.client_proxy import ClientProxy
 from flwr.server.strategy import FedAvg
 
 from heflwr.fed import extract, merge
-from heflwr.log import logger
+
 
 def get_parameters(net) -> List[np.ndarray]:
     return [val.cpu().numpy() for _, val in net.state_dict().items()]
@@ -56,7 +56,6 @@ class FjORD(FedAvg):
 
         fit_configurations = []
         for client in clients:
-            # logger.info(f'大小是{[x.shape for x in fl.common.parameters_to_ndarrays(parameters)]}')
             fit_ins = FitIns(parameters=parameters, config={})
             fit_configurations.append((client, fit_ins))
         return fit_configurations

@@ -38,6 +38,7 @@ class SSBasicBlock(nn.Module):
         out = self.bn2(out)
         if self.downsample is not None:
             # residual = self.downsample(x)
+            # flatten residual nn.Sequential or overwrite nn.Sequential
             residual = MaskedLayer(self.downsample[0], create_neuron_mask(self.downsample[0], keep_ratio))(x)
             residual = self.downsample[1](residual)
         out += residual
@@ -53,6 +54,7 @@ class ResNet(nn.Module):
                              in_channels_ranges=('0', '1'), out_channels_ranges=('0', p))
         self.bn = SSBatchNorm2d(64, features_ranges=('0', p))
         self.relu = nn.ReLU(inplace=True)
+        # flatten resnet18 nn.Sequential or overwrite nn.Sequential
         # stage1
         self.layer1_1 = SSBasicBlock(64, 64, in_channels_ranges=('0', p), out_channels_ranges=('0', p))
         self.layer1_2 = SSBasicBlock(64, 64, in_channels_ranges=('0', p), out_channels_ranges=('0', p))
@@ -69,8 +71,6 @@ class ResNet(nn.Module):
         self.avgpool = nn.AvgPool2d(kernel_size=4)
         self.fc = SSLinear(512, num_classes,
                            in_features_ranges=('0', p), out_features_ranges=('0', '1'))
-
-
 
     def forward(self, x, keep_ratio=1.0):
         out = self.relu(self.bn(MaskedLayer(self.conv, create_neuron_mask(self.conv, keep_ratio))(x)))
@@ -137,14 +137,3 @@ def create_neuron_mask(layer, keep_ratio):
     else:
         raise NotImplementedError("该类型层尚未实现")
     return mask
-
-
-if __name__ == '__main__':
-    block = SSBasicBlock(1, 2, stride=1)
-    x = torch.randn([1, 1, 3, 3])
-    output = block(x, keep_ratio=0.5)
-
-    net = ResNet18()
-    x = torch.randn([1, 3, 32, 32])
-    output1 = net(x)
-    output2 = net(x, 0.5)

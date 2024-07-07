@@ -9,18 +9,12 @@ from flwr.common import Config
 from flwr_datasets.partitioner import IidPartitioner, DirichletPartitioner
 
 from heflwr.monitor.process_monitor import FileMonitor
-# from heflwr.fed import _distribute
-from heflwr.nn import SUPPORT_LAYER
-def _distribute(client_net, server_net):
-    with torch.no_grad():
-        for layer, father_layer in zip(client_net.modules(), server_net.modules()):
-            if isinstance(layer, SUPPORT_LAYER):
-                layer.reset_parameters_from_father_layer(father_layer)
+from heflwr.fed import _distribute
 
 from dataloaders import load_partition_data
 from lenet import LeNet
 from resnet import ResNet18
-from utils import DEVICE, train, test
+from utils import DEVICE, test
 
 
 def set_parameters(net, parameters: List[np.ndarray]):
@@ -34,7 +28,7 @@ def set_parameters(net, parameters: List[np.ndarray]):
 class FlClient(fl.client.NumPyClient):
     def __init__(self, cid, net, complete_net, train_loader, test_loader, num_examples, p):
         self.cid = cid
-        self.net = net
+        self.net = net  # or load net locally to reduce v-ram cost
         self.complete_net = complete_net
         self.train_loader = train_loader
         self.test_loader = test_loader
