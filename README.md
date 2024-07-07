@@ -50,14 +50,15 @@ pip install psutil
 HeFlwr provides some baseline cases in heterogeneous federated learning (we will add more baselines in the future), using unified parameters and experimental settings to offer a comparison for these baselines:
 
 
-| Baseline-Accuracy                    | Mnist-IID  | Mnist-NonIID | Cifar10-IID | Cifar10-NonIID |
-|--------------------------------------|------------|--------------|-------------|----------------|
-| FedAvg<br/>(Theoretical Upper Bound) | 99.30%     | 98.88%       | 86.14%      | 82.62%         |
-| Federated Dropout                    | 26.32%     | 11.35%       | 16.14%      | 14.05%         |
-| HeteroFL                             | 98.44%     | 91.04%       | 80.71%      | 61.66%         |
-| MFL                                  | 98.41%     | 92.43%       | 80.70%      | 66.81%         |
-| FedRolex                             | 97.55%     | 91.17%       | 82.18%      | **67.67%**     |
-| FjORD                                | **98.72%** | **96.82%**   | **83.89%**  | 40.20%         |
+| Baseline-Accuracy                              | Mnist-IID  | Mnist-NonIID | Cifar10-IID | Cifar10-NonIID |
+|------------------------------------------------|------------|--------------|-------------|----------------|
+| FedAvg<br/>(Theoretical Upper Bound)           | 99.30%     | 98.88%       | 86.14%      | 82.62%         |
+| Federated Dropout                              | 26.32%     | 11.35%       | 16.14%      | 14.05%         |
+| HeteroFL                                       | 98.44%     | 91.04%       | 80.71%      | 61.66%         |
+| MFL                                            | 98.41%     | 92.43%       | 80.70%      | 66.81%         |
+| FedRolex                                       | 97.55%     | 91.17%       | 82.18%      | **67.67%**     |
+| FjORD                                          | **98.72%** | **96.82%**   | **83.89%**  | 40.20%         |
+| Selective Client<br/>(Theoretical Lower Bound) | 98.67%     | 97.38%       | 80.44%      | 65.43%         |
 
 For the specific settings of the above experiments, including neural network architecture, training hyperparameters (e.g., learning rate, optimizer), federated learning hyperparameters (e.g., communication rounds, number of clients), data partitioning hyperparameters (e.g., Dirichlet distribution alpha), and baseline-specific hyperparameters, please refer to the detailed implementation.
 
