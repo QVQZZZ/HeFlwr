@@ -10,13 +10,11 @@ English | [简体中文](https://github.com/QVQZZZ/HeFlwr/blob/main/README.zh.md
 HeFlwr is a framework for deploying federated learning in real-world environments.
 It provides a simple interface for researching system heterogeneity in federated learning.
 HeFlwr can customize models based on differences in client's computing capabilities and storage capacities,
-and monitor their resource usage during training.
+and monitor their resource usage during training. See our [quick start](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/en/quick_start.md)!  
 
 > ### The documentation for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/en/home.md).
 > 
 > ### The Wiki for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/wiki).
-
-See our [quick start](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/en/quick_start.md)!
 
 ## Introduction📜
 Federated Learning uses distributed devices to collaboratively train models while ensuring data privacy.
