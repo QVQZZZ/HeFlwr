@@ -16,6 +16,7 @@ and monitor their resource usage during training.
 > 
 > ### The Wiki for HeFlwr can be found [here](https://github.com/QVQZZZ/HeFlwr/wiki).
 
+See our [quick start](https://github.com/QVQZZZ/HeFlwr/blob/main/docs/en/quick_start.md)!
 
 ## Introduction📜
 Federated Learning uses distributed devices to collaboratively train models while ensuring data privacy.
