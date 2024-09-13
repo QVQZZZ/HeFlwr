@@ -72,7 +72,15 @@ class SSLinear(nn.Linear):
 
         child_out_indices = self.convert_indices(father_out_indices)
         child_in_indices = self.convert_indices(father_in_indices)
-
+        
+        # i.e. 
+        # father_out_indices = [(0, 5), (15, 20)]
+        # child_out_indices = [(0, 5), (5, 10)]
+        # father_to_child_out = {(0, 5): (0, 5), (15, 20): (5, 10)}
+        # i.e.
+        # father_in_indices = [(5, 10), (15, 20)]
+        # child_in_indices = [(0, 5), (5, 10)]
+        # father_to_child_in = {(5, 10): (0, 5), (15, 20): (5, 10)}
         father_to_child_out = {k: v for k, v in zip(father_out_indices, child_out_indices)}
         father_to_child_in = {k: v for k, v in zip(father_in_indices, child_in_indices)}
 
@@ -90,7 +98,11 @@ class SSLinear(nn.Linear):
         Each tuple in the input list contains a start and end index. This method calculates new start and
         end indices such that each new tuple's start index begins where the previous one ended, effectively
         creating a continuous range of indices without overlap.
-
+        
+        Example:
+            In:  convert_indices([(0, 5), (10, 20)])  ## father_out_indices or father_in_indices
+            Out: [(0, 5), (5, 15)]  # child_out_indices or child_out_indices
+        
         :param indices: A list of tuples, where each tuple contains a pair of integers representing start
                         and end indices.
 

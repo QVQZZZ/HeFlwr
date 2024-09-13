@@ -2,7 +2,7 @@ from typing import List
 
 import torch
 
-from ..nn import SSLinear, SSConv2d, SSBatchNorm2d
+from ..nn import SSLinear, SSConv2d, SSBatchNorm2d, SSEmbedding
 from ..nn import SUPPORT_LAYER
 
 
@@ -97,25 +97,38 @@ def aggregate_layer(global_layer: SUPPORT_LAYER,
 
     :return: None. The function updates `global_layer` in place.
     """
-    global_weight, global_bias = global_layer.weight, global_layer.bias
+    global_weight, global_bias = global_layer.weight, global_layer.bias if hasattr(global_layer, 'bias') else None
     total_weights_weight = torch.zeros_like(global_weight)
-    total_weights_bias = torch.zeros_like(global_bias)
+    total_weights_bias = torch.zeros_like(global_bias) if global_bias is not None else None
 
     for subset_layer, client_weight in zip(subset_layers, weights):
-        weight, bias = subset_layer.weight, subset_layer.bias
+        weight, bias = subset_layer.weight, subset_layer.bias if hasattr(subset_layer, 'bias') else None
         if isinstance(subset_layer, SSBatchNorm2d):
             row_index = subset_layer.features_ranges
             aggregate_bias(global_weight, weight, row_index, client_weight, total_weights_weight)
             aggregate_bias(global_bias, bias, row_index, client_weight, total_weights_bias)
-            continue
+            continue  # Skip weight matrix aggregation since BatchNorm2d only has vector weights
+            
         if isinstance(subset_layer, SSLinear):
             row_index, col_index = subset_layer.out_features_ranges, subset_layer.in_features_ranges
+            
         elif isinstance(subset_layer, SSConv2d):
             row_index, col_index = subset_layer.out_channels_ranges, subset_layer.in_channels_ranges
+        
+        # SSEmbedding: keep all num_embeddings, prune embedding_dims
+        elif isinstance(subset_layer, SSEmbedding):
+            row_index, col_index = [(0, 1)], subset_layer.embedding_dim_ranges
+            
         else:
             raise TypeError(f'Unsupported type of layer {subset_layer}.')
+            
+        # Aggregate weight matrix
         aggregate_weight(global_weight, weight, row_index, col_index, client_weight, total_weights_weight)
-        aggregate_bias(global_bias, bias, row_index, client_weight, total_weights_bias)
+        
+        # Aggregate bias if present (for SSLinear and SSConv2d)
+        # (SSEmbedding only get weight)
+        if global_bias and bias:
+            aggregate_bias(global_bias, bias, row_index, client_weight, total_weights_bias)
 
 
 def _distribute(client_net, server_net):

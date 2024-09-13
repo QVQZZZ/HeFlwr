@@ -96,7 +96,11 @@ class SSConv2d(nn.Conv2d):
         Each tuple in the input list contains a start and end index. This method calculates new start and
         end indices such that each new tuple's start index begins where the previous one ended, effectively
         creating a continuous range of indices without overlap.
-
+        
+        Example: 
+            In:  convert_indices([(0, 5), (10, 20)])
+            Out: [(0, 5), (5, 15)]
+        
         :param indices: A list of tuples, where each tuple contains a pair of integers representing start
                         and end indices.
 
