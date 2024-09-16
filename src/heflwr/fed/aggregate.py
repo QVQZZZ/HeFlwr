@@ -2,7 +2,7 @@ from typing import List
 
 import torch
 
-from ..nn import SSLinear, SSConv2d, SSBatchNorm2d, SSEmbedding
+from ..nn import SSLinear, SSConv2d, SSBatchNorm1d, SSBatchNorm2d, SSEmbedding
 from ..nn import SUPPORT_LAYER
 
 
@@ -82,11 +82,10 @@ def aggregate_layer(global_layer: SUPPORT_LAYER,
                     subset_layers: List[SUPPORT_LAYER],
                     weights: List[int]) -> None:
     """
-    Performs aggregation of layer parameters from multiple subset layers into a global layer,
-    taking into account specific layer types (SSLinear or SSConv2d or SSBatchNorm2d).
+    Performs aggregation of layer parameters from multiple subset layers into a global layer.
 
     This function aggregates parameters (weights and biases) from a collection of subset layers
-    (either SSLinear or SSConv2d or SSBatchNorm2d) into a global layer of the same type.
+    into a global layer of the same type.
     The aggregation process involves a weighted update,
     where each subset layer's influence on the global layer is proportional to its associated weight.
 
@@ -103,7 +102,7 @@ def aggregate_layer(global_layer: SUPPORT_LAYER,
 
     for subset_layer, client_weight in zip(subset_layers, weights):
         weight, bias = subset_layer.weight, subset_layer.bias if hasattr(subset_layer, 'bias') else None
-        if isinstance(subset_layer, SSBatchNorm2d):
+        if isinstance(subset_layer, (SSBatchNorm1d, SSBatchNorm2d)):
             row_index = subset_layer.features_ranges
             aggregate_bias(global_weight, weight, row_index, client_weight, total_weights_weight)
             aggregate_bias(global_bias, bias, row_index, client_weight, total_weights_bias)
