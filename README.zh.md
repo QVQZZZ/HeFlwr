@@ -1,5 +1,5 @@
 <div align="center">
-    <img src='https://github.com/QVQZZZ/HeFlwr/blob/main/pictures/logo.svg' width="250" alt="logo">
+    <img src='https://github.com/QVQZZZ/HeFlwr/blob/main/pictures/logo.png' width="250" alt="logo">
 </div>
 <h1 align="center"> HeFlwr: 用于异构设备的联邦学习框架 </h1>
 <div align="center">
