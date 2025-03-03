@@ -22,7 +22,7 @@ setup(
     url="https://github.com/QVQZZZ/HeFlwr",
     license="MIT",
     install_requires=[
-        'psutil>=5.9.0,<7.0.0',
+        'psutil>=5.9.0,<8.0.0',
         'prometheus-client>=0.17.0,<1.0.0',
     ],
 )
